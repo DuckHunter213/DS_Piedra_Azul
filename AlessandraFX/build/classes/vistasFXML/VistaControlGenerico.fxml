@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="PanelControlGenerico" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="800.0" style="-fx-padding: 0;" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alessandrafx.VistaControlGenericoController">
+   <children>
+      <VBox prefWidth="800.0" style="-fx-background-color: white;">
+         <children>
+            <Pane maxWidth="1.7976931348623157E308" prefHeight="70.0" prefWidth="800.0" style="-fx-background-color: #dd7777;">
+               <children>
+                  <Label fx:id="textoControlDe" layoutX="30.0" layoutY="12.0" text="Control de ">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane prefWidth="800.0" style="-fx-background-color: white;">
+               <children>
+                  <HBox fx:id="panelBotonera" alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="800.0" />
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Pane>
+            <ScrollPane fx:id="scrollpanePlantillas" prefWidth="800.0" style="-fx-background-color: white;">
+               <content>
+                  <FlowPane fx:id="ScrollPanelInterno" hgap="10.0" prefWidth="795.0" style="-fx-background-color: white;" vgap="10.0" />
+               </content></ScrollPane>
+         </children>
+      </VBox>
+   </children>
+</Pane>

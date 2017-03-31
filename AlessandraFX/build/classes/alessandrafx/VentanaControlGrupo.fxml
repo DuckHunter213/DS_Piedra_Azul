@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="contenedor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="785.0" style="-fx-padding: 0;" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alessandrafx.VentanaControlGrupoController">
+   <children>
+      <VBox>
+         <children>
+            <VBox prefHeight="60.0" prefWidth="720.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Nombre del curso">
+                           <font>                                           
+                              <javafx.scene.text.Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textFieldNombreCurso" layoutX="132.0" layoutY="10.0" text="Baile Payaso de Rodeo" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="10.0" prefHeight="30.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Colaborador">
+                           <font>
+                              <javafx.scene.text.Font size="14.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="listaColaboradores" prefWidth="150.0">
+                           <HBox.margin> 
+                              <javafx.geometry.Insets left="10.0" />
+                           </HBox.margin>
+                        </ComboBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="40.0" prefHeight="30.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Precio">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textFieldPrecioCurso" text="200">
+                           <HBox.margin>
+                              <javafx.geometry.Insets left="10.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefWidth="720.0">
+               <children>
+                  <Label text="horario">
+                     <font>
+                        <javafx.scene.text.Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <javafx.geometry.Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <CheckBox fx:id="checkBoxLunes" mnemonicParsing="false" text="Lunes">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="5.0" />
+                                 </VBox.margin>
+                              </CheckBox>
+                              <Label text="Hora inicio">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Spinner fx:id="horaInicioLunes" prefWidth="90.0">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets />
+                                 </VBox.margin>
+                              </Spinner>
+                              <Label layoutX="10.0" layoutY="34.0" text="Hora fin" />
+                              <Spinner fx:id="horaFinLunes" prefWidth="90.0">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets />
+                                 </VBox.margin>
+                              </Spinner>
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Salón" />
+                                    <TextField fx:id="textFieldSalonLunes" prefHeight="25.0" prefWidth="56.0">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                           <HBox.margin>
+                              <javafx.geometry.Insets />
+                           </HBox.margin>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0">
+                           <HBox.margin>
+                              <javafx.geometry.Insets bottom="5.0" right="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Separator>
+                        <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <CheckBox fx:id="checkBoxMartes" mnemonicParsing="false" text="Martes">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="5.0" />
+                                 </VBox.margin>
+                              </CheckBox>
+                              <Label text="Hora inicio">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Spinner fx:id="horaInicioMartes" prefWidth="90.0" />
+                              <Label layoutX="10.0" layoutY="34.0" text="Hora fin" />
+                              <Spinner fx:id="horaFinMartes" prefWidth="90.0" />
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Salón" />
+                                    <TextField fx:id="textFieldSalonMartes" prefHeight="25.0" prefWidth="56.0">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Separator layoutX="110.0" layoutY="15.0" orientation="VERTICAL" prefHeight="200.0">
+                           <HBox.margin>
+                              <javafx.geometry.Insets bottom="5.0" right="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Separator>
+                        <VBox layoutX="116.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <CheckBox fx:id="checkBoxMiercoles" mnemonicParsing="false" text="Miércoles">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="5.0" />
+                                 </VBox.margin>
+                              </CheckBox>
+                              <Label text="Hora inicio">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Spinner fx:id="horaInicioMiercoles" prefWidth="90.0" />
+                              <Label layoutX="10.0" layoutY="34.0" text="Hora fin" />
+                              <Spinner fx:id="horaFinMiercoles" prefWidth="90.0" />
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Salón" />
+                                    <TextField fx:id="textFieldSalonMiercoles" prefHeight="25.0" prefWidth="56.0">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Separator layoutX="216.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0">
+                           <HBox.margin>
+                              <javafx.geometry.Insets bottom="5.0" right="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Separator>
+                        <VBox layoutX="222.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <CheckBox fx:id="checkBoxJueves" mnemonicParsing="false" text="Jueves">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="5.0" />
+                                 </VBox.margin>
+                              </CheckBox>
+                              <Label text="Hora inicio">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Spinner fx:id="horaInicioJueves" prefWidth="90.0" />
+                              <Label layoutX="10.0" layoutY="34.0" text="Hora fin" />
+                              <Spinner fx:id="horaFinJueves" prefWidth="90.0" />
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Salón" />
+                                    <TextField fx:id="textFieldSalonJueves" prefHeight="25.0" prefWidth="56.0">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Separator layoutX="322.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0">
+                           <HBox.margin>
+                              <javafx.geometry.Insets bottom="5.0" right="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Separator>
+                        <VBox layoutX="328.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <CheckBox fx:id="checkBoxViernes" mnemonicParsing="false" text="Viernes">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="5.0" />
+                                 </VBox.margin>
+                              </CheckBox>
+                              <Label text="Hora inicio">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Spinner fx:id="horaInicioViernes" prefWidth="90.0" />
+                              <Label layoutX="10.0" layoutY="34.0" text="Hora fin" />
+                              <Spinner fx:id="horaFinViernes" prefWidth="90.0" />
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Salón" />
+                                    <TextField fx:id="textFieldSalonViernes" prefHeight="25.0" prefWidth="56.0">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <Separator layoutX="428.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0">
+                           <HBox.margin>
+                              <javafx.geometry.Insets bottom="5.0" right="10.0" top="5.0" />
+                           </HBox.margin>
+                        </Separator>
+                        <VBox layoutX="434.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <CheckBox fx:id="checkBoxSabado" mnemonicParsing="false" text="Sábado">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="5.0" />
+                                 </VBox.margin>
+                              </CheckBox>
+                              <Label text="Hora inicio">
+                                 <VBox.margin>
+                                    <javafx.geometry.Insets top="2.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Spinner fx:id="horaInicioSabado" prefWidth="90.0" />
+                              <Label layoutX="10.0" layoutY="34.0" text="Hora fin" />
+                              <Spinner fx:id="horaFinSabado" prefWidth="90.0" />
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Salón" />
+                                    <TextField fx:id="textFieldSalonSabado" prefHeight="25.0" prefWidth="56.0">
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <javafx.geometry.Insets left="10.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+            <Pane fx:id="panelSeleccionAlumnos">
+               <VBox.margin>
+                  <Insets left="10.0" top="25.0" />
+               </VBox.margin>
+            </Pane>
+         </children>
+         <padding>
+            <javafx.geometry.Insets left="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</Pane>
