@@ -1,0 +1,58 @@
+Ared espacio
+//El sistema llevará un registro de las clases de baile
+//El sistema llevará un registro de los colaboradores y sus horarios y E/S
+//El sistema llevará un registro de qué colaboradores imparten qué (uno a muchos)
+//Los alumnos pagan cuota de inscripción anual
+//Los alumnos pagan cuota mensual
+//El registro de alumnos es con datos y fotos
+//Se debe llevar un control de asistencia centralizado de alumnos
+//Un alumno sólo puede estar inscrito a un tipo de danza (mañana o tarde, por ejemplo)
+//Un alumno puede inscribirse a varios tipos de danza
+//un alumno puede cambiar de grupo en el mismo tipo de danza
+//Control de horarios de clases semanal
+//Notificaciones de próximas clases y pago de alumnos pendientes
+PAGOS
+//Control de egresos con motivo y monto
+//Reporte sobre estadísticas mensuales de ingresos y egresos de la escuela (iText?)
+//Si el maestro falta es un evento extraordinario fuera del sistema
+//Control de pagos con historial
+//Crear recibo de pago (iText?)
+//Penalización de 5% semanal al atrasarse en el pago
+//El final de la penalización es a criterio de la directora
+//Control de pago de colaboradores con historial
+//El pago al colaborador es porcentual al ingreso del curso
+//Se puede generar un recibo de pago
+//Si faltan más de un mes entero, no se cobrará
+//La cuota mensual puede cambiarse en un futuro
+PROMOCIONES
+//Uno puede agregar promociones en 2 categorías, incripción y mensualidad
+//Las promociones son de un solo uso
+//Las promociones deben tener un apartado para describir para qué son
+//Las promociones son porcentuales al precio a pagar
+Las promociones requieren condiciones (esto se da por supuesto que se cumple?)
+
+REQ
+El sistema llevará un registro de los cursos de baile, pudiendo definir horarios semanales y turnos (mañana y tarde).
+El sistema llevará un registro de los alumnos (datos y foto). El sistema podrá pasar lista a los alumnos dentro de un curso. El alumno se puede inscribirse a un turno de un mismo tipo de baile, pero a varios tipos de bailes. Puede cambiar entre turnos de baile.
+El sistema llevará un registro de colaboradores (datos y foto) con los horarios de trabajo, sus entradas y salidas. Si el colaborador falta, se maneja fuera del sistema.
+El pago al colaborador será porcentual al ingreso mensual del curso. El porcentaje es variable y al pagar, se puede generar un reporte. Estos pagos tienen historial.
+El sistema llevará una relación colaborador-curso-alumnos.
+Los alumnos deben realizar un pago de inscripción y reinscripción (al año) además de sus mensualidades. Si el alumno falta más de un mes, no se cobra esa mensualidad. Por cada semana de atraso en el pago, se cobra un 5% extra. Éste 5% se puede cancelar por la directora. La cuota mensual puede cambiar después y se pueden generar los recibos de pagos de los alumnos además de llevarse el historial de los mismos.
+Se pueden registrar egresos de manera rudimentaria anotando el monto y el motivo.
+El sistema debe poder generar mensualmente un reporte de ingresos y egresos de la escuela.
+El sistema puede alertar sobre las clases próximas y pagos de los alumnos.
+El sistema maneja cupones (promociones); de inscripción y mensualidad de un solo uso. Siempre son porcentuales al pago que se realiza y se agregan al momento de registrar el pago si están disponibles (se debe seleccionar). Algunas promociones requieren ciertas condiciones (que se dan por supuestas cumplidas).
+
+
+
+Registrar pago de mensualidad
+Registrar pago de anualidad 
+
+Generar reporte de mensulidad 
+Generar reporte de anualidad
+
+Registar pago a colaboradores
+Generar reporte de pago al colaborador
+
+CRUD Promociones
+
