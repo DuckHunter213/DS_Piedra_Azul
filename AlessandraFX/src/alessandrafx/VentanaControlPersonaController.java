@@ -12,6 +12,7 @@ import entidades.Colaborador;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
@@ -139,6 +140,8 @@ public class VentanaControlPersonaController extends FXGenerico implements Initi
         } else {
             this.botonGuardar.setText("Guardar colaborador");
             this.etiquetaVariable.setText("título");
+            this.etiquetaVariable2.setVisible(false);
+            this.campoVariable2.setVisible(false);
         }
 
     }
@@ -149,7 +152,7 @@ public class VentanaControlPersonaController extends FXGenerico implements Initi
         this.campoCalle.setText(alumno.getCalle());
         this.campoColonia.setText(alumno.getColonia());
         this.campoCorreo.setText(alumno.getCorreo());
-        LocalDate fecha = LocalDate.of(alumno.getFechaNacimiento().getYear() + 1900, alumno.getFechaNacimiento().getMonth(), alumno.getFechaNacimiento().getDay() + 19);
+        LocalDate fecha = LocalDate.of(alumno.getFechaNacimiento().getYear() + 1900, (alumno.getFechaNacimiento().getMonth() + 1), alumno.getFechaNacimiento().getDate());
         this.campoFechaNacimiento.setValue(fecha);
         this.campoNombre.setText(alumno.getNombre());
         this.campoNumeroCasa.setText(alumno.getNumero());
@@ -169,7 +172,7 @@ public class VentanaControlPersonaController extends FXGenerico implements Initi
         //this.campoCorreo.setText(colaborador.getCorreo());
         this.campoCorreo.setVisible(false);
         this.labelCorreo.setVisible(false);
-        LocalDate fecha = LocalDate.of(colaborador.getFechaNacimiento().getYear() + 1900, colaborador.getFechaNacimiento().getMonth(), colaborador.getFechaNacimiento().getDay() + 19);
+        LocalDate fecha = LocalDate.of(colaborador.getFechaNacimiento().getYear() + 1900, colaborador.getFechaNacimiento().getMonth() + 1, colaborador.getFechaNacimiento().getDate());
         this.campoFechaNacimiento.setValue(fecha);
         this.campoNombre.setText(colaborador.getNombre());
         this.campoNumeroCasa.setText(colaborador.getNumero());
@@ -326,7 +329,7 @@ public class VentanaControlPersonaController extends FXGenerico implements Initi
                 Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
                 Date fecha = Date.from(instant);
 
-                if (recibido) {
+                if (!recibido) {
                     sistema.agregarColabordor(apMat, apPat, calle, colonia, correo, nombre, titulo, numero, telefono, fecha);
                 } else {
                     sistema.editarColaborador(apMat, apPat, calle, colonia, correo, nombre, titulo, numero, telefono, fecha, colaborador.getMatriculaColaborador());

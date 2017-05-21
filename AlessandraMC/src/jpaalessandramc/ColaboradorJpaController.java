@@ -192,5 +192,5 @@ public class ColaboradorJpaController implements Serializable{
             em.close();
         }
     }
-    
+
 }

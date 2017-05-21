@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alessandrafx.VentanaEgresoController">
+   <children>
+      <VBox prefWidth="800.0">
+         <children>
+            <TabPane fx:id="tabPane" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+               <tabs>
+                  <Tab fx:id="mensualidadTab" text="Pago a colaborador">
+                     <content>
+                        <VBox>
+                           <children>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label text="Colaborador">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets right="20.0" />
+                                       </padding>
+                                    </Label>
+                                    <Button fx:id="botonSeleccionarColaborador" mnemonicParsing="false" onMouseClicked="#seleccionarColaborador" text="Seleccionar colaborador" />
+                                    <Label fx:id="labelNombreColaborador" layoutX="10.0" layoutY="13.0">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets left="20.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </opaqueInsets>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0">
+                                 <children>
+                                    <Label text="Ideal a pagar">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets right="20.0" />
+                                       </padding>
+                                    </Label>
+                                    <Label fx:id="labelPagoIdeal" layoutX="10.0" layoutY="13.0" text="0">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0">
+                                 <children>
+                                    <Label text="Total a pagarle">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets right="55.0" />
+                                       </padding>
+                                    </Label>
+                                    <TextField fx:id="textFieldPagoColaborador" text="0" />
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </opaqueInsets>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Button fx:id="botonCancelarPagoColaborador" mnemonicParsing="false" onMouseClicked="#clicCancelarPagoColaborador" text="Cancelar">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Button fx:id="botonGuardarPagoColaborador" mnemonicParsing="false" onMouseClicked="#clicGuardarPagoColaborador" text="Guardar" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="anualidadTab" text="Otros gastos">
+                     <content>
+                        <VBox>
+                           <children>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label text="Ingrese los datos del gasto">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets right="20.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </opaqueInsets>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0">
+                                 <children>
+                                    <Label text="Total del gasto">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets right="55.0" />
+                                       </padding>
+                                    </Label>
+                                    <TextField fx:id="textFieldMontoGasto" text="0" />
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </opaqueInsets>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="55.0">
+                                 <children>
+                                    <Label text="Motivo">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets right="20.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </opaqueInsets>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <TextArea fx:id="textFieldMotivoGasto" prefHeight="90.0" prefWidth="740.0" />
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Button fx:id="botonCancelarGasto" mnemonicParsing="false" onMouseClicked="#clicCancelarOtroGasto" text="Cancelar">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Button fx:id="botonGuardarGasto" mnemonicParsing="false" onMouseClicked="#clicGuardarOtroGasto" text="Guardar" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+   <padding>
+      <Insets top="5.0" />
+   </padding>
+</Pane>

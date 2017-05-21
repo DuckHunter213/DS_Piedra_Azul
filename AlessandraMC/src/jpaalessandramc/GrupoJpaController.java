@@ -271,5 +271,5 @@ public class GrupoJpaController implements Serializable{
             em.close();
         }
     }
-    
+
 }

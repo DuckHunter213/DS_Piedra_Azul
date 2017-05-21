@@ -14,8 +14,10 @@ import javax.persistence.criteria.Root;
 import entidades.Listagrupo;
 import java.util.ArrayList;
 import java.util.List;
+import entidades.Pago;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import jpaalessandramc.exceptions.IllegalOrphanException;
 import jpaalessandramc.exceptions.NonexistentEntityException;
 import jpaalessandramc.exceptions.PreexistingEntityException;
 
@@ -38,6 +40,9 @@ public class AlumnoJpaController implements Serializable{
         if (alumno.getListagrupoList() == null){
             alumno.setListagrupoList(new ArrayList<Listagrupo>());
         }
+        if (alumno.getPagoList() == null){
+            alumno.setPagoList(new ArrayList<Pago>());
+        }
         EntityManager em = null;
         try{
             em = getEntityManager();
@@ -48,6 +53,12 @@ public class AlumnoJpaController implements Serializable{
                 attachedListagrupoList.add(listagrupoListListagrupoToAttach);
             }
             alumno.setListagrupoList(attachedListagrupoList);
+            List<Pago> attachedPagoList = new ArrayList<Pago>();
+            for (Pago pagoListPagoToAttach : alumno.getPagoList()){
+                pagoListPagoToAttach = em.getReference(pagoListPagoToAttach.getClass(), pagoListPagoToAttach.getFolioPago());
+                attachedPagoList.add(pagoListPagoToAttach);
+            }
+            alumno.setPagoList(attachedPagoList);
             em.persist(alumno);
             for (Listagrupo listagrupoListListagrupo : alumno.getListagrupoList()){
                 Alumno oldMatriculaAlumnoOfListagrupoListListagrupo = listagrupoListListagrupo.getMatriculaAlumno();
@@ -56,6 +67,15 @@ public class AlumnoJpaController implements Serializable{
                 if (oldMatriculaAlumnoOfListagrupoListListagrupo != null){
                     oldMatriculaAlumnoOfListagrupoListListagrupo.getListagrupoList().remove(listagrupoListListagrupo);
                     oldMatriculaAlumnoOfListagrupoListListagrupo = em.merge(oldMatriculaAlumnoOfListagrupoListListagrupo);
+                }
+            }
+            for (Pago pagoListPago : alumno.getPagoList()){
+                Alumno oldMatriculaAlumnoOfPagoListPago = pagoListPago.getMatriculaAlumno();
+                pagoListPago.setMatriculaAlumno(alumno);
+                pagoListPago = em.merge(pagoListPago);
+                if (oldMatriculaAlumnoOfPagoListPago != null){
+                    oldMatriculaAlumnoOfPagoListPago.getPagoList().remove(pagoListPago);
+                    oldMatriculaAlumnoOfPagoListPago = em.merge(oldMatriculaAlumnoOfPagoListPago);
                 }
             }
             em.getTransaction().commit();
@@ -71,7 +91,7 @@ public class AlumnoJpaController implements Serializable{
         }
     }
 
-    public void edit(Alumno alumno) throws NonexistentEntityException, Exception{
+    public void edit(Alumno alumno) throws IllegalOrphanException, NonexistentEntityException, Exception{
         EntityManager em = null;
         try{
             em = getEntityManager();
@@ -79,6 +99,20 @@ public class AlumnoJpaController implements Serializable{
             Alumno persistentAlumno = em.find(Alumno.class, alumno.getMatriculaAlumno());
             List<Listagrupo> listagrupoListOld = persistentAlumno.getListagrupoList();
             List<Listagrupo> listagrupoListNew = alumno.getListagrupoList();
+            List<Pago> pagoListOld = persistentAlumno.getPagoList();
+            List<Pago> pagoListNew = alumno.getPagoList();
+            List<String> illegalOrphanMessages = null;
+            for (Pago pagoListOldPago : pagoListOld){
+                if (!pagoListNew.contains(pagoListOldPago)){
+                    if (illegalOrphanMessages == null){
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Pago " + pagoListOldPago + " since its matriculaAlumno field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null){
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             List<Listagrupo> attachedListagrupoListNew = new ArrayList<Listagrupo>();
             for (Listagrupo listagrupoListNewListagrupoToAttach : listagrupoListNew){
                 listagrupoListNewListagrupoToAttach = em.getReference(listagrupoListNewListagrupoToAttach.getClass(), listagrupoListNewListagrupoToAttach.getFolioListaGrupo());
@@ -86,6 +120,13 @@ public class AlumnoJpaController implements Serializable{
             }
             listagrupoListNew = attachedListagrupoListNew;
             alumno.setListagrupoList(listagrupoListNew);
+            List<Pago> attachedPagoListNew = new ArrayList<Pago>();
+            for (Pago pagoListNewPagoToAttach : pagoListNew){
+                pagoListNewPagoToAttach = em.getReference(pagoListNewPagoToAttach.getClass(), pagoListNewPagoToAttach.getFolioPago());
+                attachedPagoListNew.add(pagoListNewPagoToAttach);
+            }
+            pagoListNew = attachedPagoListNew;
+            alumno.setPagoList(pagoListNew);
             alumno = em.merge(alumno);
             for (Listagrupo listagrupoListOldListagrupo : listagrupoListOld){
                 if (!listagrupoListNew.contains(listagrupoListOldListagrupo)){
@@ -101,6 +142,17 @@ public class AlumnoJpaController implements Serializable{
                     if (oldMatriculaAlumnoOfListagrupoListNewListagrupo != null && !oldMatriculaAlumnoOfListagrupoListNewListagrupo.equals(alumno)){
                         oldMatriculaAlumnoOfListagrupoListNewListagrupo.getListagrupoList().remove(listagrupoListNewListagrupo);
                         oldMatriculaAlumnoOfListagrupoListNewListagrupo = em.merge(oldMatriculaAlumnoOfListagrupoListNewListagrupo);
+                    }
+                }
+            }
+            for (Pago pagoListNewPago : pagoListNew){
+                if (!pagoListOld.contains(pagoListNewPago)){
+                    Alumno oldMatriculaAlumnoOfPagoListNewPago = pagoListNewPago.getMatriculaAlumno();
+                    pagoListNewPago.setMatriculaAlumno(alumno);
+                    pagoListNewPago = em.merge(pagoListNewPago);
+                    if (oldMatriculaAlumnoOfPagoListNewPago != null && !oldMatriculaAlumnoOfPagoListNewPago.equals(alumno)){
+                        oldMatriculaAlumnoOfPagoListNewPago.getPagoList().remove(pagoListNewPago);
+                        oldMatriculaAlumnoOfPagoListNewPago = em.merge(oldMatriculaAlumnoOfPagoListNewPago);
                     }
                 }
             }
@@ -121,7 +173,7 @@ public class AlumnoJpaController implements Serializable{
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException{
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException{
         EntityManager em = null;
         try{
             em = getEntityManager();
@@ -132,6 +184,17 @@ public class AlumnoJpaController implements Serializable{
                 alumno.getMatriculaAlumno();
             }catch (EntityNotFoundException enfe){
                 throw new NonexistentEntityException("The alumno with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            List<Pago> pagoListOrphanCheck = alumno.getPagoList();
+            for (Pago pagoListOrphanCheckPago : pagoListOrphanCheck){
+                if (illegalOrphanMessages == null){
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Alumno (" + alumno + ") cannot be destroyed since the Pago " + pagoListOrphanCheckPago + " in its pagoList field has a non-nullable matriculaAlumno field.");
+            }
+            if (illegalOrphanMessages != null){
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             List<Listagrupo> listagrupoList = alumno.getListagrupoList();
             for (Listagrupo listagrupoListListagrupo : listagrupoList){
@@ -192,5 +255,5 @@ public class AlumnoJpaController implements Serializable{
             em.close();
         }
     }
-    
+
 }

@@ -6,10 +6,8 @@
 package alessandramc;
 
 import entidades.Alumno;
-import entidades.Colaborador;
 import entidades.Grupo;
 import entidades.Promociones;
-import java.util.Date;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -42,8 +40,8 @@ public class PlantillaPruebas{
         List listagrupoList = null;
         SistemaAleMC instance = new SistemaAleMC();
         boolean expResult = false;
-        boolean result = instance.agregarAsistencia(folioListaGrupo, listagrupoList);
-        assertEquals(expResult, result);
+//        boolean result = instance.agregarAsistencia(folioListaGrupo, listagrupoList);
+        //assertEquals(expResult, result);
         fail("Esta prueba no ha sido terminada");
     }
 

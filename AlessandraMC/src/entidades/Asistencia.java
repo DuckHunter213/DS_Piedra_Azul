@@ -7,21 +7,20 @@ package entidades;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -44,8 +43,9 @@ public class Asistencia implements Serializable{
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    @OneToMany(mappedBy = "folioAsistencia")
-    private List<Listagrupo> listagrupoList;
+    @JoinColumn(name = "folioListaGrupo", referencedColumnName = "folioListaGrupo")
+    @ManyToOne
+    private Listagrupo folioListaGrupo;
 
     public Asistencia(){
     }
@@ -70,13 +70,12 @@ public class Asistencia implements Serializable{
         this.fecha = fecha;
     }
 
-    @XmlTransient
-    public List<Listagrupo> getListagrupoList(){
-        return listagrupoList;
+    public Listagrupo getFolioListaGrupo(){
+        return folioListaGrupo;
     }
 
-    public void setListagrupoList(List<Listagrupo> listagrupoList){
-        this.listagrupoList = listagrupoList;
+    public void setFolioListaGrupo(Listagrupo folioListaGrupo){
+        this.folioListaGrupo = folioListaGrupo;
     }
 
     @Override
@@ -103,5 +102,5 @@ public class Asistencia implements Serializable{
     public String toString(){
         return "entidades.Asistencia[ folioAsistencia=" + folioAsistencia + " ]";
     }
-    
+
 }

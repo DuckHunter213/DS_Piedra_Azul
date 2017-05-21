@@ -1,42 +1,33 @@
 package alessandramc;
 
-import entidades.Capital;
-import entidades.Colaborador;
-import entidades.Horario;
-import entidades.Promociones;
-import entidades.Asistencia;
-import entidades.Alumno;
-import entidades.Grupo;
-import entidades.Listagrupo;
+import entidades.*;
+import entidadesExtends.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
-import jpaalessandramc.*;
 import javax.persistence.Persistence;
 import javax.persistence.EntityManagerFactory;
-import jpaalessandramc.exceptions.NonexistentEntityException;
-import javax.persistence.Query;
 
 /**
  *
  * @author Luis Fernando Gomez Alejandre
  */
-public class SistemaAleMC {
+public class SistemaAleMC{
 
-    EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("AlessandraMCPU");
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-    AlumnoJpaController alumnoBD = new AlumnoJpaController(entityManagerFactory);
-    ColaboradorJpaController colaboradorBD = new ColaboradorJpaController(entityManagerFactory);
-    GrupoJpaController grupoBD = new GrupoJpaController(entityManagerFactory);
-    HorarioJpaController horarioBD = new HorarioJpaController(entityManagerFactory);
-    ListagrupoJpaController listagrupoBD = new ListagrupoJpaController(entityManagerFactory);
-    AsistenciaJpaController asistenciaBD = new AsistenciaJpaController(entityManagerFactory);
-    CapitalJpaController capitalBD = new CapitalJpaController(entityManagerFactory);
-    PromocionesJpaController promocionBD = new PromocionesJpaController(entityManagerFactory);
+    private final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("AlessandraMCPU");
+    private final EntityManager entityManager = entityManagerFactory.createEntityManager();
+    
+    private final ConfiguracionExtends configuracionExtends = new ConfiguracionExtends();
+    private final AlumnoExtends alumnoExtends = new AlumnoExtends();
+    private final ColaboradorExtends colaboradorExtends = new ColaboradorExtends();
+    private final GrupoExtends grupoExtends = new GrupoExtends();
+    private final ListagrupoExtends listagrupoExtends = new ListagrupoExtends();
+    private final CapitalExtends capitalExtends = new CapitalExtends();
+    private final PromocionesExtends promocionesExtends = new PromocionesExtends();
+    private final PagoExtends pagoExtends = new PagoExtends();
+    private final AsistenciaExtends asistenciaExtends = new AsistenciaExtends();
 
     /**
      *
@@ -53,29 +44,18 @@ public class SistemaAleMC {
      * @param fecha
      * @return
      */
-    public boolean agregarAlumno(String apellidoMaterno, String apellidoPaterno, String calle, String colonia, String correo, String nombre, String nombreTutor, String numero, String telefono, String telefonoTutor, Date fecha) {
-        Alumno alumno = new Alumno();
-        alumno.setApellidoMaterno(apellidoMaterno);
-        alumno.setApellidoPaterno(apellidoPaterno);
-        alumno.setCalle(calle);
-        alumno.setNumero(numero);
-        alumno.setColonia(colonia);
-        alumno.setCorreo(correo);
-        alumno.setEstado(Boolean.TRUE);
-        alumno.setFechaNacimiento(fecha);
-        alumno.setMatriculaAlumno(Util.generarMatricula());
-        alumno.setNombre(nombre);
-        alumno.setNombreTutor(nombreTutor);
-        alumno.setTelefono(telefono);
-        alumno.setTelefonoTutor(telefonoTutor);
+    public boolean agregarAlumno(String apellidoMaterno, String apellidoPaterno, String calle, String colonia, String correo, String nombre, String nombreTutor, String numero, String telefono, String telefonoTutor, Date fecha){
+        return alumnoExtends.agregarAlumno(apellidoMaterno, apellidoPaterno, calle, colonia, correo, nombre, nombreTutor, numero, telefono, telefonoTutor, fecha);
+    }
 
-        try {
-            alumnoBD.create(alumno);
-            return true;
-        } catch (Exception ex) {
-            System.err.println("Ha ocurrido al agregar un alumno");
-        }
-        return false;
+    /**
+     *
+     * @param grupo
+     * @param listaAlumnos
+     * @return
+     */
+    public boolean agregarAsistencia(Grupo grupo, ArrayList<Alumno> listaAlumnos){
+        return asistenciaExtends.agregarAsistencia(grupo, listaAlumnos);
     }
 
     /**
@@ -83,21 +63,11 @@ public class SistemaAleMC {
      * @param cantidadCupones
      * @param nombre
      * @param porcentajeDescuento
+     * @param tipo
      * @return
      */
-    public boolean agregarPromocion(String cantidadCupones, String nombre, String porcentajeDescuento, boolean tipo) {
-        Promociones promocion = new Promociones();
-        promocion.setCantidadCupones(cantidadCupones);
-        promocion.setNombre(nombre);
-        promocion.setPorcentajeDescuento(porcentajeDescuento);
-        promocion.setTipo(tipo);
-        try {
-            promocionBD.create(promocion);
-            return true;
-        } catch (Exception ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+    public boolean agregarPromocion(String cantidadCupones, String nombre, String porcentajeDescuento, boolean tipo){
+        return promocionesExtends.agregarPromocion(cantidadCupones, nombre, porcentajeDescuento, tipo);
     }
 
     /**
@@ -110,18 +80,8 @@ public class SistemaAleMC {
      * @param colaborador
      * @return Valores boleanos TRUE si pudo agregar a la base de datos
      */
-    public boolean crearGrupo(String nombre, String precio, List<Horario> listaHorarios, List<Alumno> listaAlumnos, Colaborador colaborador) {
-        try {
-            String matricula = Util.generarMatriculaGrupo();
-            agregarGrupo(nombre, precio, matricula, listaHorarios);
-            Grupo grupo = buscarGrupoMatricula(matricula);
-            editarColaboradorGrupo(grupo, colaborador);
-            agregarAlumnoGrupo(grupo, listaAlumnos);
-            return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
+    public boolean crearGrupo(String nombre, String precio, List<Horario> listaHorarios, List<Alumno> listaAlumnos, Colaborador colaborador){
+        return grupoExtends.crearGrupo(nombre, precio, listaHorarios, listaAlumnos, colaborador);
     }
 
     /**
@@ -140,60 +100,8 @@ public class SistemaAleMC {
      * @param fecha
      * @return
      */
-    public boolean agregarColabordor(String apellidoMaterno, String apellidoPaterno, String calle, String colonia, String correo, String nombre, String titulo, String numero, String telefono, Date fecha) {
-        Colaborador colaborador = new Colaborador();
-        colaborador.setApellidoMaterno(apellidoMaterno);
-        colaborador.setApellidoPaterno(apellidoPaterno);
-        colaborador.setCalle(calle);
-        colaborador.setColonia(colonia);
-        colaborador.setNumero(numero);
-        colaborador.setEstado(Boolean.TRUE);
-        colaborador.setFechaNacimiento(fecha);
-        colaborador.setMatriculaColaborador(Util.generarMatricula());
-        colaborador.setNombre(nombre);
-        colaborador.setTelefono(telefono);
-        colaborador.setTitulo(titulo);
-
-        try {
-            colaboradorBD.create(colaborador);
-            return true;
-        } catch (Exception ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-
-    /**
-     * Version flexible para agregar grupos sin datos
-     *
-     * @param nombre
-     * @param precio
-     * @param matricula
-     * @param listaHorarios
-     * @return
-     */
-    private boolean agregarGrupo(String nombre, String precio, String matricula, List<Horario> listaHorarios) {
-        Grupo grupo = new Grupo();
-        grupo.setEstado(Boolean.TRUE);
-        grupo.setMatriculaGrupo(matricula);
-        grupo.setNombre(nombre);
-        grupo.setPrecio(precio);
-        try {
-            grupoBD.create(grupo);
-            for (Horario h : listaHorarios) {
-                h.setMatriculaGrupo(grupo);
-                horarioBD.create(h);
-            }
-            return true;
-        } catch (Exception ex) {
-            System.err.println("Error en grupo");
-        }
-        return false;
-    }
-
-    private boolean agregarReferenciaHorario(Horario horario, Grupo grupo) {
-        horarioBD.create(horario);
-        return false;
+    public boolean agregarColabordor(String apellidoMaterno, String apellidoPaterno, String calle, String colonia, String correo, String nombre, String titulo, String numero, String telefono, Date fecha){
+        return colaboradorExtends.agregarColabordor(apellidoMaterno, apellidoPaterno, calle, colonia, correo, nombre, titulo, numero, telefono, fecha);
     }
 
     /**
@@ -203,15 +111,8 @@ public class SistemaAleMC {
      * @param colaborador El colaborador que se le asignara el grupo
      * @return
      */
-    public boolean editarColaboradorGrupo(Grupo grupo, Colaborador colaborador) {
-        grupo.setMatriculaColaborador(colaborador);
-        try {
-            grupoBD.edit(grupo);
-            return true;
-        } catch (Exception ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+    public boolean editarColaboradorGrupo(Grupo grupo, Colaborador colaborador){
+        return grupoExtends.editarColaboradorGrupo(grupo, colaborador);
     }
 
     /**
@@ -221,147 +122,8 @@ public class SistemaAleMC {
      * @param tipo
      * @return
      */
-    public boolean agregarCapital(String monto, String motivo, Character tipo) {
-        Capital capital = new Capital();
-        Date fechaCreacion = new Date();
-        capital.setFechaCreacion(fechaCreacion);
-        capital.setMonto(monto);
-        capital.setMotivo(motivo);
-        capital.setTipo(tipo);
-
-        try {
-            capitalBD.create(capital);
-            return true;
-        } catch (Exception e) {
-            //TODO
-        }
-        return false;
-    }
-
-    /**
-     * Agregar una asistencia el método no ha sido probado
-     *
-     * @param folioListaGrupo
-     * @param listagrupoList
-     * @return
-     */
-    public boolean agregarAsistencia(Integer folioListaGrupo, List listagrupoList) {
-        Asistencia asistencia = new Asistencia();
-        Date fecha = new Date();
-        asistencia.setFecha(fecha);
-        asistencia.setFolioAsistencia(folioListaGrupo);
-        asistencia.setListagrupoList(listagrupoList);
-
-        try {
-            asistenciaBD.create(asistencia);
-            return true;
-        } catch (Exception e) {
-
-        }
-        return false;
-    }
-
-    /**
-     * Agrega los alumnos a un grupo determinado siempre y cuando las
-     * referencias del grupo esten vacias
-     *
-     * @param grupo
-     * @param listaAlumno
-     * @return
-     */
-    private boolean agregarAlumnoGrupo(Grupo grupo, List<Alumno> listaAlumno) {
-        List<Listagrupo> listaGrupo = new ArrayList<>();
-        while (!listaAlumno.isEmpty()) {
-            Listagrupo lista = new Listagrupo();
-            lista.setMatriculaAlumno(listaAlumno.get(0));
-            lista.setEstado(Boolean.TRUE);
-            listagrupoBD.create(lista);
-            listaGrupo.add(lista);
-            listaAlumno.remove(0);
-        }
-        grupo.setListagrupoList(listaGrupo);
-        try {
-            grupoBD.edit(grupo);
-            return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
-    }
-
-    private boolean editarListaAlumnoGrupo(Grupo grupoEditado, List<Alumno> listaAlumno, Grupo grupoOriginal) {
-        List<Listagrupo> listaGrupo = new ArrayList<>();
-        List<Listagrupo> resultado = new ArrayList<>();
-        for (int i = 0; i < listaAlumno.size(); i++) {
-            Query query = entityManager.createNamedQuery("Listagrupo.findByInscripcion").setParameter("matriculaGrupo", grupoOriginal).setParameter("matriculaAlumno", listaAlumno.get(i));
-            List<Listagrupo> consulta = query.getResultList();
-
-            while (!consulta.isEmpty()) {
-                resultado.add(consulta.get(0));
-                consulta.remove(0);
-            }
-        }
-
-        ArrayList<Listagrupo> listaAnterior = new ArrayList<>();
-        for (int i = 0; i < resultado.size(); i++) {
-            resultado.get(i).setEstado(Boolean.FALSE);
-            listaAnterior.add(resultado.get(i));
-        }
-
-        for (int i = 0; i < listaAlumno.size(); i++) {
-            for (int j = 0; j < resultado.size(); j++) {
-                if (listaAlumno.get(i).equals(resultado.get(j).getMatriculaAlumno())) {
-                    resultado.get(j).setEstado(Boolean.TRUE);
-                    listaGrupo.add(resultado.get(j));
-                    try {
-                        listagrupoBD.edit(resultado.get(i));
-                        listaAlumno.remove(j);
-                    } catch (Exception ex) {
-                        Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-
-        while (!listaAlumno.isEmpty()) {
-            Listagrupo lista = new Listagrupo();
-            lista.setEstado(Boolean.TRUE);
-            lista.setMatriculaAlumno(listaAlumno.get(0));
-            lista.setMatriculaGrupo(grupoEditado);
-            listaGrupo.add(lista);
-            try {
-                listagrupoBD.create(lista);
-            } catch (Exception ex) {
-                Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            listaAlumno.remove(0);
-        }
-        //Checar este metodo para que no deje referencias vacias
-        for (int i = 0; i < listaGrupo.size(); i++) {
-            for (int j = 0; j < listaAnterior.size(); j++) {
-                if (listaGrupo.get(i).getMatriculaAlumno().equals(listaAnterior.get(j).getMatriculaAlumno())) {
-                    listaAnterior.remove(j);
-                    break;
-                }
-            }
-        }
-        for (Listagrupo listagrupo : listaAnterior) {
-            System.out.println(listagrupo.toString());
-        }
-
-        while (!listaAnterior.isEmpty()) {
-            listaGrupo.add(listaAnterior.get(0));
-            listaAnterior.remove(0);
-        }
-
-        grupoEditado.setListagrupoList(listaGrupo);
-        try {
-            grupoBD.edit(grupoEditado);
-            return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
+    public boolean agregarCapital(String monto, String motivo, Character tipo){
+        return capitalExtends.agregarCapital(monto, motivo, tipo);
     }
 
     /**
@@ -370,7 +132,6 @@ public class SistemaAleMC {
      * @param apellidoPaterno
      * @param calle
      * @param colonia
-     * @param alumno
      * @param nombre
      * @param nombreTutor
      * @param correo
@@ -381,26 +142,8 @@ public class SistemaAleMC {
      * @param matriculaAlumno
      * @return
      */
-    public boolean editarAlumno(String apellidoMaterno, String apellidoPaterno, String calle, String colonia, String correo, String nombre, String nombreTutor, String numero, String telefono, String telefonoTutor, Date fechaNacimiento, String matriculaAlumno) {
-        Alumno alumno = buscarAlumnoMatricula(matriculaAlumno);
-        alumno.setNombre(nombre);
-        alumno.setApellidoPaterno(apellidoPaterno);
-        alumno.setApellidoMaterno(apellidoMaterno);
-        alumno.setCalle(calle);
-        alumno.setColonia(colonia);
-        alumno.setFechaNacimiento(fechaNacimiento);
-        alumno.setNombreTutor(nombreTutor);
-        alumno.setTelefono(telefono);
-        alumno.setTelefonoTutor(telefonoTutor);
-        try {
-            alumnoBD.edit(alumno);
-            return true;
-        } catch (NonexistentEntityException ex) {
-            System.err.println("No existe el usuario en la base de datos");
-        } catch (Exception ex) {
-            System.err.println("Hubo un error");
-        }
-        return false;
+    public boolean editarAlumno(String apellidoMaterno, String apellidoPaterno, String calle, String colonia, String correo, String nombre, String nombreTutor, String numero, String telefono, String telefonoTutor, Date fechaNacimiento, String matriculaAlumno){
+        return alumnoExtends.editarAlumno(apellidoMaterno, apellidoPaterno, calle, colonia, correo, nombre, nombreTutor, numero, telefono, telefonoTutor, fechaNacimiento, matriculaAlumno);
     }
 
     /**
@@ -418,25 +161,8 @@ public class SistemaAleMC {
      * @param titulo
      * @return
      */
-    public boolean editarColaborador(String apellidoMaterno, String apellidoPaterno, String calle, String colonia, String correo, String nombre, String titulo, String numero, String telefono, Date fecha, String matriculaColaborador) {
-        Colaborador colaborador = buscarColaboradorMatricula(matriculaColaborador);
-        colaborador.setApellidoMaterno(apellidoMaterno);
-        colaborador.setApellidoPaterno(apellidoPaterno);
-        colaborador.setCalle(calle);
-        colaborador.setColonia(colonia);
-        colaborador.setEstado(Boolean.TRUE);
-        colaborador.setFechaNacimiento(fecha);
-        colaborador.setNombre(nombre);
-        colaborador.setNumero(numero);
-        colaborador.setTelefono(telefono);
-        colaborador.setTitulo(titulo);
-        try {
-            colaboradorBD.edit(colaborador);
-            return true;
-        } catch (Exception ex) {
-            System.err.println("Hubo un error");
-        }
-        return false;
+    public boolean editarColaborador(String apellidoMaterno, String apellidoPaterno, String calle, String colonia, String correo, String nombre, String titulo, String numero, String telefono, Date fecha, String matriculaColaborador){
+        return colaboradorExtends.editarColaborador(apellidoMaterno, apellidoPaterno, calle, colonia, correo, nombre, titulo, numero, telefono, fecha, matriculaColaborador);
     }
 
     /**
@@ -447,53 +173,13 @@ public class SistemaAleMC {
      * @param precio precio del grupo
      * @param listaAlumnos lista de alumnos
      * @param listaHorarios lista de horarios
+     * @param alumnosRetirados
      * @param matricula matricula del grupo
      * @param colaborador referecia del colaborador
      * @return
      */
-    public boolean editarGrupo(String nombre, String precio, List<Horario> listaHorarios, List<Alumno> listaAlumnos, Colaborador colaborador, String matricula) {
-        Grupo grupoEditado = new Grupo();
-        Grupo grupoOriginal = buscarGrupoMatricula(matricula);
-
-        grupoEditado.setNombre(nombre);
-        grupoEditado.setPrecio(precio);
-        grupoEditado.setMatriculaColaborador(colaborador);
-        grupoEditado.setMatriculaGrupo(matricula);
-        grupoEditado.setEstado(Boolean.TRUE);
-
-        List<Horario> listaHorarioOriginal = grupoOriginal.getHorarioList();
-
-        for (Horario horario : listaHorarioOriginal) {
-            quitarReferenciaHorario(horario, grupoOriginal);
-        }
-        grupoEditado.setHorarioList(listaHorarios);
-        for (Horario horario : listaHorarios) {
-            horario.setMatriculaGrupo(grupoEditado);
-            agregarReferenciaHorario(horario, grupoEditado);
-        }
-        for (int i = 0; i < listaAlumnos.size(); i++) {
-            quitarReferenciaAlumno(grupoEditado, listaAlumnos.get(i));
-            editarListaAlumnoGrupo(grupoEditado, listaAlumnos, grupoOriginal);
-        }
-
-        try {
-            grupoBD.edit(grupoEditado);
-        } catch (Exception ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return false;
-    }
-
-    //<editor-fold defaultstate="collapsed" desc="Busquedas">
-    /**
-     *
-     * @param nombre
-     * @return
-     */
-    public ArrayList<Colaborador> buscarColaborador(String nombre) {
-        Query query = entityManager.createNamedQuery("Colaborador.findByNombre").setParameter("nombre", nombre);
-        return Util.castListToArray(query.getResultList());
+    public boolean editarGrupo(String nombre, String precio, List<Horario> listaHorarios, List<Alumno> listaAlumnos, ArrayList<Alumno> alumnosRetirados, Colaborador colaborador, String matricula){
+        return grupoExtends.editarGrupo(nombre, precio, listaHorarios, listaAlumnos, alumnosRetirados, colaborador, matricula);
     }
 
     /**
@@ -501,9 +187,8 @@ public class SistemaAleMC {
      * @param nombre
      * @return
      */
-    public ArrayList<Alumno> buscarAlumno(String nombre) {
-        Query query = entityManager.createNamedQuery("Alumno.findByNombre").setParameter("nombre", nombre);
-        return Util.castListToArray(query.getResultList());
+    public ArrayList<Colaborador> buscarColaborador(String nombre){
+        return colaboradorExtends.buscarColaborador(nombre);
     }
 
     /**
@@ -511,9 +196,17 @@ public class SistemaAleMC {
      * @param nombre
      * @return
      */
-    public ArrayList<Grupo> buscarGrupo(String nombre) {
-        Query query = entityManager.createNamedQuery("Grupo.findByNombre").setParameter("nombre", nombre);
-        return Util.castListToArray(query.getResultList());
+    public ArrayList<Alumno> buscarAlumno(String nombre){
+        return alumnoExtends.buscarAlumno(nombre);
+    }
+
+    /**
+     *
+     * @param nombre
+     * @return
+     */
+    public ArrayList<Grupo> buscarGrupo(String nombre){
+        return grupoExtends.buscarGrupo(nombre);
     }
 
     /**
@@ -522,10 +215,8 @@ public class SistemaAleMC {
      * @param matricula criterio de busqueda del método
      * @return regresa la referencia de un grupo
      */
-    public Grupo buscarGrupoMatricula(String matricula) {
-        Query query = entityManager.createNamedQuery("Grupo.findByMatriculaGrupo").setParameter("matriculaGrupo", matricula);
-        List<Grupo> resultado = query.getResultList();
-        return resultado.get(0);
+    public Grupo buscarGrupoMatricula(String matricula){
+        return grupoExtends.buscarGrupoMatricula(matricula);
     }
 
     /**
@@ -534,10 +225,8 @@ public class SistemaAleMC {
      * @param matricula criterio de busqueda del método
      * @return regresa la referencia de un grupo
      */
-    public Alumno buscarAlumnoMatricula(String matricula) {
-        Query query = entityManager.createNamedQuery("Alumno.findByMatriculaAlumno").setParameter("matriculaAlumno", matricula);
-        List<Alumno> resultado = query.getResultList();
-        return resultado.get(0);
+    public Alumno buscarAlumnoMatricula(String matricula){
+        return alumnoExtends.buscarAlumnoMatricula(matricula);
     }
 
     /**
@@ -546,70 +235,18 @@ public class SistemaAleMC {
      * @param matricula criterio de busqueda del método
      * @return regresa la referencia de un grupo
      */
-    public Colaborador buscarColaboradorMatricula(String matricula) {
-        Query query = entityManager.createNamedQuery("Colaborador.findByMatriculaColaborador").setParameter("matriculaColaborador", matricula);
-        List<Colaborador> resultado = query.getResultList();
-        return resultado.get(0);
-    }
-    //</editor-fold>
-
-    public ArrayList<Promociones> getTodasPromocionesActivas() {
-        Query query = entityManager.createNamedQuery("Promociones.findAll");
-        List<Promociones> result = query.getResultList();
-        ArrayList<Promociones> listaResultado = new ArrayList<>();
-        for (Promociones promocion : result) {
-            if (Integer.parseInt(promocion.getCantidadCupones()) != 0) {
-                listaResultado.add(promocion);
-            }
-        }
-        return listaResultado;
+    public Colaborador buscarColaboradorMatricula(String matricula){
+        return colaboradorExtends.buscarColaboradorMatricula(matricula);
     }
 
-    private boolean quitarReferenciaHorario(Horario horario, Grupo grupo) {
-        try {
-            horarioBD.destroy(horario.getFolioHorario());
-            return true;
-        } catch (NonexistentEntityException ex) {
-            ex.printStackTrace();
-        }
-        return false;
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Promociones> getTodasPromocionesActivas(){
+        return promocionesExtends.getTodasPromocionesActivas();
     }
 
-    private boolean quitarReferenciaAlumno(Grupo grupo, Alumno alumno) {
-        Query query = entityManager.createNamedQuery("Listagrupo.findByInscripcion").setParameter("matriculaGrupo", grupo).setParameter("matriculaAlumno", alumno);
-        ArrayList<Listagrupo> lista = Util.castListToArray(query.getResultList());
-        for (int i = 0; i < lista.size(); i++) {
-            lista.get(i).setEstado(Boolean.FALSE);
-            try {
-                listagrupoBD.edit(lista.get(i));
-            } catch (Exception ex) {
-                Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static void main(String[] args) {
-        SistemaAleMC ale = new SistemaAleMC();
-
-        Grupo grupo = ale.buscarGrupo("Danza Arabe Alluh Balbar").get(0);
-        Alumno alumno = ale.alumnoBD.findAlumno("0170329211817");
-        ArrayList listaAlumnos = new ArrayList<>();
-        listaAlumnos.add(alumno);
-        System.err.println("Cambios");
-
-        ArrayList<Horario> listaHorarios = new ArrayList<>();
-        Horario horario = new Horario();
-        horario.setDia("Lunes");
-        horario.setHoraFin("Fin");
-        horario.setHoraInicio("Inicio");
-        horario.setSalon("108");
-        listaHorarios.add(horario);
-        ale.editarGrupo(grupo.getNombre(), grupo.getPrecio(), listaHorarios, listaAlumnos, grupo.getMatriculaColaborador(), grupo.getMatriculaGrupo());
-    }
-
-    //<editor-fold defaultstate="collapsed" desc="Deshabilitar Habilitar">
     /**
      * Pone el valor de una promocion en 0, no es posible editarlo despues
      *
@@ -617,15 +254,8 @@ public class SistemaAleMC {
      * @return regresa True en caso de poder desabilitarlo y False en caso de no
      * poder
      */
-    public boolean desabilitarPromocion(Promociones promocion) {
-        promocion.setCantidadCupones("0");
-        try {
-            promocionBD.edit(promocion);
-            return true;
-        } catch (Exception ex) {
-
-        }
-        return false;
+    public boolean desabilitarPromocion(Promociones promocion){
+        return promocionesExtends.desabilitarPromocion(promocion);
     }
 
     /**
@@ -635,17 +265,8 @@ public class SistemaAleMC {
      * @return regresa True en caso de poder desabilitarlo y False en caso de no
      * poder
      */
-    public boolean desabilitarAlumno(Alumno alumno) {
-        alumno.setEstado(Boolean.FALSE);
-        try {
-            alumnoBD.edit(alumno);
-            return true;
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+    public boolean desabilitarAlumno(Alumno alumno){
+        return alumnoExtends.desabilitarAlumno(alumno);
     }
 
     /**
@@ -655,17 +276,8 @@ public class SistemaAleMC {
      * @return regresa True en caso de poder desabilitarlo y False en caso de no
      * poder
      */
-    public boolean desabilitarColaborador(Colaborador colaborador) {
-        colaborador.setEstado(Boolean.FALSE);
-        try {
-            colaboradorBD.edit(colaborador);
-            return true;
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+    public boolean desabilitarColaborador(Colaborador colaborador){
+        return colaboradorExtends.desabilitarColaborador(colaborador);
     }
 
     /**
@@ -675,17 +287,8 @@ public class SistemaAleMC {
      * @return regresa True en caso de poder desabilitarlo y False en caso de no
      * poder
      */
-    public boolean desabilitarGrupo(Grupo grupo) {
-        grupo.setEstado(Boolean.FALSE);
-        try {
-            grupoBD.edit(grupo);
-            return true;
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+    public boolean desabilitarGrupo(Grupo grupo){
+        return grupoExtends.desabilitarGrupo(grupo);
     }
 
     /**
@@ -695,17 +298,8 @@ public class SistemaAleMC {
      * @return regresa True en caso de poder desabilitarlo y False en caso de no
      * poder
      */
-    public boolean habilitarColaborador(Colaborador colaborador) {
-        colaborador.setEstado(Boolean.TRUE);
-        try {
-            colaboradorBD.edit(colaborador);
-            return true;
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+    public boolean habilitarColaborador(Colaborador colaborador){
+        return colaboradorExtends.habilitarColaborador(colaborador);
     }
 
     /**
@@ -713,17 +307,8 @@ public class SistemaAleMC {
      * @param grupo
      * @return
      */
-    public boolean habilitarGrupo(Grupo grupo) {
-        grupo.setEstado(Boolean.TRUE);
-        try {
-            grupoBD.edit(grupo);
-            return true;
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+    public boolean habilitarGrupo(Grupo grupo){
+        return grupoExtends.habilitarGrupo(grupo);
     }
 
     /**
@@ -731,17 +316,8 @@ public class SistemaAleMC {
      * @param alumno
      * @return
      */
-    public boolean habilitarAlumno(Alumno alumno) {
-        alumno.setEstado(Boolean.TRUE);
-        try {
-            alumnoBD.edit(alumno);
-            return true;
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(SistemaAleMC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+    public boolean habilitarAlumno(Alumno alumno){
+        return alumnoExtends.habilitarAlumno(alumno);
     }
 
     /**
@@ -752,38 +328,44 @@ public class SistemaAleMC {
      * @return regresa True en caso de poder desabilitarlo y False en caso de no
      * poder
      */
-    public boolean desabilitarAlumnoGrupo(Grupo grupo, Alumno alumno) {
-        List<Listagrupo> resultado = listagrupoBD.findListagrupoEntities();
-        for (Listagrupo listagrupo : resultado) {
-            if (listagrupo.getMatriculaGrupo().equals(grupo)) {
-                if (listagrupo.getMatriculaAlumno().equals(alumno)) {
-                    listagrupo.setEstado(Boolean.FALSE);
-                    try {
-                        listagrupoBD.edit(listagrupo);
-                        return true;
-                    } catch (Exception ex) {
-                    }
-                }
-            }
-        }
-        return false;
+    public boolean desabilitarAlumnoGrupo(Grupo grupo, Alumno alumno){
+        return grupoExtends.desabilitarAlumnoGrupo(grupo, alumno);
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Ciertos Métodos Get y Set">
     /**
      * Método que regreasa a todos los alumnos inscritos de la base de datos sin
      * diferenciar que esten activos
      *
      * @return arraylist de alumnos
      */
-    public ArrayList<Alumno> getTodosAlumnos() {
-        return Util.castListToArray(alumnoBD.findAlumnoEntities());
+    public ArrayList<Alumno> getTodosAlumnos(){
+        return alumnoExtends.getTodosAlumnos();
     }
 
-    public ArrayList<Alumno> getTodosAlumnosActivos() {
-        Query query = entityManager.createNamedQuery("Alumno.findByEstado").setParameter("estado", true);
-        return Util.castListToArray(query.getResultList());
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Alumno> getTodosAlumnosActivos(){
+        return alumnoExtends.getTodosAlumnosActivos();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Alumno> getTodosAlumnosConDeuda(){
+        return alumnoExtends.getTodosAlumnosConDeuda();
+    }
+
+    /**
+     *
+     * @param alumno
+     * @param criterio
+     * @return
+     */
+    public boolean quitarAdeudoAlumno(Alumno alumno, String criterio){
+        return pagoExtends.quitarAdeudo(alumno, criterio);
     }
 
     /**
@@ -792,13 +374,16 @@ public class SistemaAleMC {
      *
      * @return arraylist de colaboradores
      */
-    public ArrayList<Colaborador> getTodosColaboradores() {
-        return Util.castListToArray(colaboradorBD.findColaboradorEntities());
+    public ArrayList<Colaborador> getTodosColaboradores(){
+        return colaboradorExtends.getTodosColaboradores();
     }
 
-    public ArrayList<Colaborador> getTodosColaboradoresActivos() {
-        Query query = entityManager.createNamedQuery("Colaborador.findByEstado").setParameter("estado", true);
-        return Util.castListToArray(query.getResultList());
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Colaborador> getTodosColaboradoresActivos(){
+        return colaboradorExtends.getTodosColaboradoresActivos();
     }
 
     /**
@@ -807,8 +392,8 @@ public class SistemaAleMC {
      *
      * @return arraylist con todos los grupos
      */
-    public ArrayList<Grupo> getTodosGrupos() {
-        return Util.castListToArray(grupoBD.findGrupoEntities());
+    public ArrayList<Grupo> getTodosGrupos(){
+        return grupoExtends.getTodosGrupos();
     }
 
     /**
@@ -816,9 +401,8 @@ public class SistemaAleMC {
      *
      * @return arraylist con todos los grupos
      */
-    public ArrayList<Grupo> getTodosGruposActivos() {
-        Query query = entityManager.createNamedQuery("Grupo.findByEstado").setParameter("estado", true);
-        return Util.castListToArray(query.getResultList());
+    public ArrayList<Grupo> getTodosGruposActivos(){
+        return grupoExtends.getTodosGruposActivos();
     }
 
     /**
@@ -828,17 +412,8 @@ public class SistemaAleMC {
      * @param grupo grupo al que se le desea conocer los alumnos inscritos
      * @return arraylist con alumnos inscritos
      */
-    public ArrayList<Alumno> getAlumnosInscritos(Grupo grupo) {
-        ArrayList<Alumno> listaAlumnosArray = new ArrayList<>();
-        List<Listagrupo> resultado = listagrupoBD.findListagrupoEntities();
-
-        for (Listagrupo listagrupo : resultado) {
-            if (listagrupo.getMatriculaGrupo().equals(grupo)) {
-                listaAlumnosArray.add(listagrupo.getMatriculaAlumno());
-            }
-        }
-
-        return listaAlumnosArray;
+    public ArrayList<Alumno> getAlumnosInscritos(Grupo grupo){
+        return grupoExtends.getAlumnosInscritos(grupo);
     }
 
     /**
@@ -848,20 +423,183 @@ public class SistemaAleMC {
      * @param grupo grupo al que se le desea conocer los alumnos inscritos
      * @return arraylist con alumnos inscritos
      */
-    public ArrayList<Alumno> getAlumnosInscritosActivos(Grupo grupo) {
-        ArrayList<Alumno> listaAlumnosArray = new ArrayList<>();
-
-        Query query = entityManager.createNamedQuery("Listagrupo.findByAlumnosActivos").setParameter("matriculaGrupo", grupo).setParameter("estado", true);
-        List<Listagrupo> resultado = query.getResultList();
-
-        for (Listagrupo listagrupo : resultado) {
-            if (listagrupo.getMatriculaGrupo().equals(grupo)) {
-                listaAlumnosArray.add(listagrupo.getMatriculaAlumno());
-            }
-        }
-
-        return listaAlumnosArray;
+    public ArrayList<Alumno> getAlumnosInscritosActivos(Grupo grupo){
+        return listagrupoExtends.getAlumnosInscritosActivos(grupo);
     }
-    //</editor-fold>
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Grupo> getGruposSinLista(){
+        return asistenciaExtends.mostrarGruposSinLista();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Grupo> getGruposPorDia(){
+        return grupoExtends.getGruposPorDia();
+    }
+
+    /**
+     *
+     * @param porcentajePenalizacion
+     * @param porcentajePagoColaborador
+     * @param costoAnual
+     * @return
+     */
+    public boolean agregarConfiguracion(String porcentajePenalizacion, String porcentajePagoColaborador, int costoAnual){
+        return configuracionExtends.nuevaConfiguracion(costoAnual, porcentajePagoColaborador, porcentajePenalizacion);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Configuracion getConfiguracion(){
+        return configuracionExtends.getConfiguracion();
+    }
+
+    /**
+     *
+     * @param alumno
+     * @return
+     */
+    public ArrayList<Pago> getMensualidadesActivas(Alumno alumno){
+        return pagoExtends.getMansualidadesActivas(alumno);
+    }
+
+    /**
+     *
+     * @param tipo El tipo debera ser un string "a" para anualidad y "m" para
+     * mensualidad
+     * @return
+     */
+    public ArrayList<Pago> getAdeudosActivas(String tipo){
+        return pagoExtends.getMansualidadesActivas(tipo);
+    }
+
+    /**
+     *
+     * @param criterio donde toma un valor boleano donde verdadero es anualidad
+     * y falso mensualidad
+     * @return
+     */
+    public ArrayList<Promociones> getPromociones(boolean criterio){
+        return promocionesExtends.getPromociones(criterio);
+    }
+
+    /**
+     *
+     * @param monto
+     * @param periodo
+     * @param matriculaAlumno
+     * @return
+     */
+    public boolean agregarAdeudo(String monto, String periodo, Alumno matriculaAlumno){
+        return pagoExtends.agregarAdeudo(monto, periodo, matriculaAlumno);
+    }
+
+    /**
+     *
+     * @param alumno
+     * @param criterio ocupar un String indicando ya se la anualidad "a" o una
+     * "m" para mesualidad
+     * @return
+     */
+    public ArrayList<Pago> getAdeudosActivos(Alumno alumno, String criterio){
+        return pagoExtends.getAdeudosActivos(alumno, criterio);
+    }
+
+    /**
+     *
+     * @param promocion
+     * @return
+     */
+    public boolean restarPromocion(Promociones promocion){
+        return promocionesExtends.restarPromocion(promocion);
+    }
+
+    /**
+     *
+     * @param colaborador
+     * @return
+     */
+    public String calcularPagoColaborador(Colaborador colaborador){
+        return capitalExtends.calcularPagoColaborador(colaborador);
+    }
+
+    /**
+     *
+     * @param colaborador
+     * @return
+     */
+    public String calcularPagoColaboradorPeriodo(Colaborador colaborador){
+        return capitalExtends.calcularPagoColaboradorPeriodo(colaborador);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Capital> getTodosRegistrosCapital(){
+        return capitalExtends.getTodosRegistrosCapital();
+    }
+
+    /**
+     *
+     * @param tipo
+     * @return
+     */
+    public ArrayList<Capital> getRegistrosCapitalTipo(char tipo){
+        return capitalExtends.getRegistrosCapitalTipo(tipo);
+    }
+
+    /**
+     *
+     * @param alumno
+     * @return
+     */
+    public int estadoMensualidad(Alumno alumno){
+        return alumnoExtends.estadoMensualidad(alumno);
+    }
+
+    /**
+     *
+     * @param alumno
+     * @return
+     */
+    public String calcularPagoMensualidad(Alumno alumno){
+        return alumnoExtends.calcularPagoMensualidad(alumno);
+    }
+
+    /**
+     *
+     * @param alumno
+     * @param monto
+     * @return
+     */
+    public boolean guardarAdeudoAlumno(Alumno alumno, String monto){
+        return capitalExtends.guardarAdeudoAlumno(alumno, monto);
+    }
+
+    /**
+     *
+     * @param args
+     */
+    public static void main(String[] args){
+        SistemaAleMC ale = new SistemaAleMC();
+        GregorianCalendar gc = new GregorianCalendar();
+        System.out.println(gc.get(GregorianCalendar.DAY_OF_WEEK));
+//        ArrayList<Alumno> result = ale.getTodosAlumnosActivos();
+//        Date date = new Date();
+//        System.out.println(Util.fechaToString(date));
+//        for (Alumno alumno : result){
+//            System.out.print("Alumno: " + alumno.toString() + "\t\t ");
+//            System.out.println(Util.diasAtraso(alumno.getUltimaFechaPago()));
+//        }
+    }
 
 }

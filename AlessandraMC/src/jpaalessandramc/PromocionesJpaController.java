@@ -134,5 +134,5 @@ public class PromocionesJpaController implements Serializable{
             em.close();
         }
     }
-    
+
 }

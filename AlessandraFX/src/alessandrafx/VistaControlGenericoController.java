@@ -9,11 +9,15 @@ import alessandramc.SistemaAleMC;
 import entidades.Alumno;
 import entidades.Colaborador;
 import entidades.Grupo;
+import entidades.Horario;
 import entidades.Promociones;
 import util.ControlledScreen;
 import util.ScreensController;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -48,6 +52,7 @@ public class VistaControlGenericoController extends FXGenerico implements Initia
     public static final String PLANTILLA_VISTA_GENERAL = PATH_INICIAL + "PlantillaVistaGeneral.fxml";
     private ArrayList<PlantillaVistaGeneralController> listaPlantillas;
     private List<Grupo> grupos;
+    private List<Grupo> gruposPaseLista;
     private List<Alumno> alumnos;
     private List<Colaborador> colaboradores;
     private List<Promociones> promociones;
@@ -65,7 +70,7 @@ public class VistaControlGenericoController extends FXGenerico implements Initia
         this.panelBotonera.getChildren().add(botonAgregarElemento);
         botonAgregarElemento.addEventHandler(ActionEvent.ACTION, event -> clic());
     }
-    
+
     @Override
     public void setScreenParent(ScreensController screenParent) {
         myController = screenParent;
@@ -75,6 +80,7 @@ public class VistaControlGenericoController extends FXGenerico implements Initia
 
     public void setTipoControl(String tipoObjeto) {
         grupos = new ArrayList<>();
+        gruposPaseLista = new ArrayList<>();
         alumnos = new ArrayList<>();
         colaboradores = new ArrayList<>();
         listaPlantillas = new ArrayList<>();
@@ -97,6 +103,10 @@ public class VistaControlGenericoController extends FXGenerico implements Initia
                 promociones = sistema.getTodasPromocionesActivas();
                 setPromociones();
                 break;
+            case "paseLista":
+                gruposPaseLista = sistema.getGruposSinLista();
+                setGruposParaPasarLista();
+                break;
             default:
                 Alert alerta = new Alert(Alert.AlertType.INFORMATION);
                 alerta.setTitle("Cargamos mal algo");
@@ -106,20 +116,14 @@ public class VistaControlGenericoController extends FXGenerico implements Initia
                 break;
         }
     }
-    
-    //<editor-fold defaultstate="collapse" desc="Sobre setear el tipo de objetido de las plantillas">
 
+    //<editor-fold defaultstate="collapse" desc="Sobre setear el tipo de objetido de las plantillas">
     //Método exclisivo para Grupos, no debe abarcar ningún otro tipo de objeto, se usa junto a setearPlantilla
     private void setGrupo() {
         botonAgregarElemento.setText("Agregar grupo");
         this.textoControlDe.setText("Control de grupos");
-        if (grupos.isEmpty()) {
-            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-            alerta.setTitle("Empezamos");
-            alerta.setHeaderText(null);
-            alerta.setContentText("El sistema es nuevo, prueba añadiendo algunos grupos ;) ");
-            alerta.showAndWait();
-        } else {
+
+        if (!grupos.isEmpty()) {
             ScreensController mainContainer;
             for (Grupo grupo : grupos) {
                 mainContainer = new ScreensController();
@@ -128,10 +132,16 @@ public class VistaControlGenericoController extends FXGenerico implements Initia
                 FlowPane root = (FlowPane) this.ScrollPanelInterno;
                 root.getChildren().add(mainContainer);
             }
+        } else{
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setTitle("No hay grupos");
+            alerta.setHeaderText(null);
+            alerta.setContentText("No hay aquí, prueba añadiendo algunos");
+            alerta.showAndWait();
         }
     }
 
-    //Método exclisivo para Alumnos, no debe abarcar ningún otro tipo de objeto, se usa junto a setearPlantilla
+//Método exclisivo para Alumnos, no debe abarcar ningún otro tipo de objeto, se usa junto a setearPlantilla
     private void setAlumnos() {
         botonAgregarElemento.setText("Agregar alumno");
         this.textoControlDe.setText("Control de alumnos");
@@ -174,7 +184,7 @@ public class VistaControlGenericoController extends FXGenerico implements Initia
             }
         }
     }
-    
+
     //Método exclisivo para Promocion, no debe abarcar ningún otro tipo de objeto, se usa junto a setearPlantilla
     private void setPromociones() {
         botonAgregarElemento.setText("Agregar promoción");
@@ -195,23 +205,50 @@ public class VistaControlGenericoController extends FXGenerico implements Initia
             }
         }
     }
-    
-    //setear grupo por pantalla
-    public void setearPlantilla(PlantillaVistaGeneralController plantilla){
-        listaPlantillas.add(plantilla);
-        if (!grupos.isEmpty())
-            plantilla.setGrupo(grupos.get(listaPlantillas.size()-1));
-        if (!alumnos.isEmpty())
-            plantilla.setAlumno(alumnos.get(listaPlantillas.size()-1));
-        if (!colaboradores.isEmpty())
-            plantilla.setColaborador(colaboradores.get(listaPlantillas.size()-1));
-        if (!promociones.isEmpty())
-            plantilla.setPromociones(promociones.get(listaPlantillas.size()-1));
+
+    private void setGruposParaPasarLista() {
+        botonAgregarElemento.setVisible(false);
+        panelBotonera.setVisible(false);
+        this.textoControlDe.setText("Pase de lista");
+        if (gruposPaseLista.isEmpty()) {
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setTitle("No hay grupos por hoy");
+            alerta.setHeaderText(null);
+            alerta.setContentText("No hay ningún grupo para pasarle lista, prueba mañana");
+            alerta.showAndWait();
+        } else {
+            ScreensController mainContainer;
+            for (Grupo grupo : gruposPaseLista) {
+                mainContainer = new ScreensController();
+                mainContainer.loadScreen(VistaControlGenericoController.PLANTILLA_VISTA_GENERAL, VistaControlGenericoController.PLANTILLA_VISTA_GENERAL, this);
+                mainContainer.setScreen(VistaControlGenericoController.PLANTILLA_VISTA_GENERAL);
+                FlowPane root = (FlowPane) this.ScrollPanelInterno;
+                root.getChildren().add(mainContainer);
+            }
+        }
     }
-    
+
+    //setear grupo por pantalla
+    public void setearPlantilla(PlantillaVistaGeneralController plantilla) {
+        listaPlantillas.add(plantilla);
+        if (!grupos.isEmpty()) {
+            plantilla.setGrupo(grupos.get(listaPlantillas.size() - 1));
+        }
+        if (!alumnos.isEmpty()) {
+            plantilla.setAlumno(alumnos.get(listaPlantillas.size() - 1));
+        }
+        if (!colaboradores.isEmpty()) {
+            plantilla.setColaborador(colaboradores.get(listaPlantillas.size() - 1));
+        }
+        if (!promociones.isEmpty()) {
+            plantilla.setPromociones(promociones.get(listaPlantillas.size() - 1));
+        }
+        if (!gruposPaseLista.isEmpty()) {
+            plantilla.setGrupo(gruposPaseLista.get(listaPlantillas.size() - 1));
+        }
+    }
+
     //</editor-fold>
-    
-    
     //public void set
     public void recibirElementoClic(PlantillaVistaGeneralController elemento) {
         padre.cambiarVistaElementoSeleccionado(elemento);
@@ -225,6 +262,16 @@ public class VistaControlGenericoController extends FXGenerico implements Initia
 
     public void clic() {
         padre.nuevoRegistroGenerico();
+    }
+
+    private String obtenerDiaSemana() {
+        String[] dias = {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
+        Date hoy = new Date();
+        int numeroDia = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(hoy);
+        numeroDia = cal.get(Calendar.DAY_OF_WEEK);
+        return dias[numeroDia - 1];
     }
 
 }

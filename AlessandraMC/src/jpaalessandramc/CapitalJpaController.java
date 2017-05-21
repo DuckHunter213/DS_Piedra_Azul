@@ -134,5 +134,5 @@ public class CapitalJpaController implements Serializable{
             em.close();
         }
     }
-    
+
 }

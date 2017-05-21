@@ -31,23 +31,26 @@ public class ColaboradorCRUDTest{
     @Before
     public void setUp(){
         Colaborador colaborador = new Colaborador();
-        colaborador.setApellidoMaterno("Alejandre");
-        colaborador.setApellidoPaterno("Vicencio");
-        colaborador.setCalle("Unidad Buena Vista");
-        colaborador.setColonia("Buena Vista");
-        colaborador.setEstado(Boolean.TRUE);
-        Date fechaNacimiento = new Date();
-        colaborador.setFechaNacimiento(fechaNacimiento);
         colaborador.setMatriculaColaborador(matriculaColaborador);
         colaborador.setNombre("Alma Rosa");
-        colaborador.setNumero("6F");
-        colaborador.setTelefono("2281125347");
+        colaborador.setApellidoMaterno("Alejandre");
+        colaborador.setApellidoPaterno("Vicencio");
+        Date fechaNacimiento = new Date();
+        colaborador.setFechaNacimiento(fechaNacimiento);
         colaborador.setTitulo("Maestra en Danzas Danzables");
+        colaborador.setCalle("Unidad Buena Vista");
+        colaborador.setNumero("6F");
+        colaborador.setColonia("Buena Vista");
+        colaborador.setFechaRegistro(fechaNacimiento);
+        colaborador.setFechaPago(fechaNacimiento);
+        colaborador.setTelefono("2281125347");
+        colaborador.setEstado(Boolean.TRUE);
 
         try{
             colaboradorBD.create(colaborador);
         }catch (Exception ex){
             System.err.println("Error al guardar al colaborador en la base de datos");
+            ex.printStackTrace();
         }
 
     }

@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entidades;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -43,8 +39,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Alumno.findByTelefono", query = "SELECT a FROM Alumno a WHERE a.telefono = :telefono")
     , @NamedQuery(name = "Alumno.findByEstado", query = "SELECT a FROM Alumno a WHERE a.estado = :estado")
     , @NamedQuery(name = "Alumno.findByMatriculaAlumno", query = "SELECT a FROM Alumno a WHERE a.matriculaAlumno = :matriculaAlumno")
+    , @NamedQuery(name = "Alumno.findByUltimaFechaPago", query = "SELECT a FROM Alumno a WHERE a.ultimaFechaPago = :ultimaFechaPago")
     , @NamedQuery(name = "Alumno.findByFechaInscripcion", query = "SELECT a FROM Alumno a WHERE a.fechaInscripcion = :fechaInscripcion")})
-public class Alumno extends Persona implements  Serializable{
+public class Alumno extends Persona implements Serializable{
     private static final long serialVersionUID = 1L;
     @Column(name = "nombre")
     private String nombre;
@@ -78,12 +75,17 @@ public class Alumno extends Persona implements  Serializable{
     @Column(name = "fechaInscripcion")
     @Temporal(TemporalType.DATE)
     private Date fechaInscripcion;
+    @Column(name = "ultimaFechaPago")
+    @Temporal(TemporalType.DATE)
+    private Date ultimaFechaPago;
     @OneToMany(mappedBy = "matriculaAlumno")
     private List<Listagrupo> listagrupoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matriculaAlumno")
+    private List<Pago> pagoList;
 
     public Alumno(){
     }
-
+    
     public Alumno(String matriculaAlumno){
         this.matriculaAlumno = matriculaAlumno;
     }
@@ -200,6 +202,14 @@ public class Alumno extends Persona implements  Serializable{
         this.fechaInscripcion = fechaInscripcion;
     }
 
+    public Date getUltimaFechaPago(){
+        return ultimaFechaPago;
+    }
+
+    public void setUltimaFechaPago(Date ultimaFechaPago){
+        this.ultimaFechaPago = ultimaFechaPago;
+    }
+
     @XmlTransient
     public List<Listagrupo> getListagrupoList(){
         return listagrupoList;
@@ -207,6 +217,15 @@ public class Alumno extends Persona implements  Serializable{
 
     public void setListagrupoList(List<Listagrupo> listagrupoList){
         this.listagrupoList = listagrupoList;
+    }
+
+    @XmlTransient
+    public List<Pago> getPagoList(){
+        return pagoList;
+    }
+
+    public void setPagoList(List<Pago> pagoList){
+        this.pagoList = pagoList;
     }
 
     @Override
@@ -238,5 +257,5 @@ public class Alumno extends Persona implements  Serializable{
     public String getTipoPersona(){
         return "alumno";
     }
-    
+
 }

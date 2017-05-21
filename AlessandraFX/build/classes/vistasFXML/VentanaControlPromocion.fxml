@@ -44,17 +44,14 @@
                               <Font size="14.0" />
                            </font>
                            <HBox.margin>
-                              <Insets bottom="5.0" top="5.0" />
+                              <Insets left="10.0" top="1.0" />
                            </HBox.margin>
                         </Label>
                         <ToggleButtonGroup selectionType="SINGLE">
-                            <toggles>
+                           <toggles>
                                 <ToggleButton fx:id="toggleMensualidad" text="Mensualidad" />
                                 <ToggleButton fx:id="toggleAnualidad" text="Anualidad" />
-                            </toggles>
-                           <HBox.margin>
-                              <Insets left="10.0" top="2.0" />
-                           </HBox.margin>
+                           </toggles>
                         </ToggleButtonGroup>
                      </children>
                   </HBox>

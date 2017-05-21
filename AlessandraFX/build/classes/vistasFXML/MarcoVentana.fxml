@@ -20,22 +20,22 @@
 
 <BorderPane fx:id="panelPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alessandrafx.MarcoVentanaController">
    <top>
-      <VBox prefHeight="150.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="129.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <FlowPane alignment="CENTER_LEFT" prefHeight="120.0" prefWidth="600.0" rowValignment="TOP" style="-fx-background-color: #333;">
+            <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="89.0" prefWidth="800.0" style="-fx-background-color: #fefefe;">
                <children>
-                  <Text fx:id="tituloSistema" strokeType="OUTSIDE" strokeWidth="0.0" text="Alessandra">
+                  <Text fx:id="tituloSistema" fill="#e42626" strokeType="OUTSIDE" strokeWidth="0.0" text="Alessandra">
                      <font>
-                        <Font name="Lucida Calligraphy Italic" size="70.0" />
+                        <Font name="Lucida Calligraphy Italic" size="64.0" />
                      </font>
                   </Text>
                </children>
             </FlowPane>
-            <HBox maxHeight="-Infinity" prefHeight="40.0" prefWidth="600.0" style="-fx-background-color: #666; -fx-border-color: black; -fx-border-width: 2;">
+            <HBox maxHeight="-Infinity" prefHeight="40.0" prefWidth="600.0" style="-fx-background-color: #EEE; -fx-border-color: black; -fx-border-width: 1;">
                <children>
                   <HBox fx:id="menuSecciones" prefHeight="32.0" prefWidth="500.0">
                      <children>
-                        <MenuBar prefHeight="30.0" style="-fx-background-color: #666;">
+                        <MenuBar prefHeight="30.0" style="-fx-background-color: #eee;">
                           <menus>
                             <Menu mnemonicParsing="false" text="Control ▼">
                               <items>
@@ -47,20 +47,20 @@
                             </Menu>
                           </menus>
                         </MenuBar>
-                        <Button fx:id="menuBotonAsistencia" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #666; -fx-font-size: 14; -fx-font-weight: bold;" text="Asistencia" />
-                        <Button fx:id="menuBotonIngresos" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #666; -fx-border-radius: 0; -fx-font-size: 14; -fx-font-weight: bold;" text="Ingresos" />
-                        <Button fx:id="menuBotonEgresos" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #666; -fx-border-radius: 0; -fx-font-size: 14; -fx-font-weight: bold;" text="Egresos" />
-                        <Button fx:id="menuBotonReportes" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #666; -fx-border-radius: 0; -fx-font-size: 14; -fx-font-weight: bold;" text="Reportes" />
+                        <Button fx:id="menuBotonAsistencia" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#irAAsistencia" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #EEE; -fx-font-size: 14; -fx-font-weight: bold;" text="Asistencia" />
+                        <Button fx:id="menuBotonIngresos" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#irAIngresos" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #EEE; -fx-border-radius: 0; -fx-font-size: 14; -fx-font-weight: bold;" text="Ingresos" />
+                        <Button fx:id="menuBotonEgresos" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#irAEgresos" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #EEE; -fx-border-radius: 0; -fx-font-size: 14; -fx-font-weight: bold;" text="Egresos" />
+                        <Button fx:id="menuBotonReportes" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#generarReporteMenusal" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #EEE; -fx-border-radius: 0; -fx-font-size: 14; -fx-font-weight: bold;" text="Reportes" />
                      </children>
                   </HBox>
                   <HBox nodeOrientation="RIGHT_TO_LEFT" prefHeight="32.0" prefWidth="300.0">
                      <children>
-                        <Button fx:id="menuBotonNotificaciones" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #666; -fx-border-radius: 0; -fx-font-size: 14; -fx-font-weight: bold;" text="&quot;0x25&quot;">
+                        <Button fx:id="menuBotonNotificaciones" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #EEE; -fx-border-radius: 0; -fx-font-size: 14; -fx-font-weight: bold;" text="&quot;0x25&quot;">
                            <font>
                               <Font name="Wingdings" size="12.0" />
                            </font>
                         </Button>
-                        <Button fx:id="menuBotonConfiguracion" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #666; -fx-border-radius: 0; -fx-font-size: 14; -fx-font-weight: bold;" text="Control " />
+                        <Button fx:id="menuBotonConfiguracion" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#irAControl" prefHeight="30.0" prefWidth="118.0" style="-fx-background-color: #EEE; -fx-border-radius: 0; -fx-font-size: 14; -fx-font-weight: bold;" text="Configuración" />
                      </children>
                   </HBox>
                </children>
@@ -69,18 +69,23 @@
       </VBox>
    </top>
    <center>
-      <ScrollPane pannable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <content>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="800.0" BorderPane.alignment="CENTER">
+         <children>
             <VBox>
                <children>
-                  <Pane maxWidth="1.7976931348623157E308" pickOnBounds="false" prefHeight="30.0" prefWidth="785.0" style="-fx-background-color: #ddd;">
+                  <Pane maxWidth="1.7976931348623157E308" pickOnBounds="false" prefHeight="30.0" prefWidth="800.0" style="-fx-background-color: #C9BFE8;">
                      <children>
                         <Label fx:id="tituloSeccion" layoutX="14.0" layoutY="8.0" text=" Bienvenido a Ared Espacio" />
                      </children>
                   </Pane>
-                  <Pane fx:id="panelContenedor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="785.0" />
+                  <ScrollPane prefHeight="441.0" prefWidth="200.0">
+                     <content>
+                        <Pane fx:id="panelContenedor" />
+                     </content>
+                  </ScrollPane>
                </children>
             </VBox>
-         </content></ScrollPane>
+         </children>
+      </Pane>
    </center>
 </BorderPane>

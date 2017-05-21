@@ -100,9 +100,6 @@ public class PruebasDeAgregacion{
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of agregarCapital method, of class SistemaAleMC.
-     */
     @Test
     public void testAgregarCapital(){
         System.out.println("agregarCapital");
@@ -115,4 +112,5 @@ public class PruebasDeAgregacion{
         assertEquals(expResult, result);
     }
 
+    
 }

@@ -132,5 +132,5 @@ public class Horario implements Serializable{
     public String toString(){
         return "entidades.Horario[ folioHorario=" + folioHorario + " ]";
     }
-    
+
 }

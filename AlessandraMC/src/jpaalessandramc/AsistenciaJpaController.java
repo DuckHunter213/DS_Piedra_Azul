@@ -12,7 +12,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import entidades.Listagrupo;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -34,28 +33,19 @@ public class AsistenciaJpaController implements Serializable{
     }
 
     public void create(Asistencia asistencia){
-        if (asistencia.getListagrupoList() == null){
-            asistencia.setListagrupoList(new ArrayList<Listagrupo>());
-        }
         EntityManager em = null;
         try{
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Listagrupo> attachedListagrupoList = new ArrayList<Listagrupo>();
-            for (Listagrupo listagrupoListListagrupoToAttach : asistencia.getListagrupoList()){
-                listagrupoListListagrupoToAttach = em.getReference(listagrupoListListagrupoToAttach.getClass(), listagrupoListListagrupoToAttach.getFolioListaGrupo());
-                attachedListagrupoList.add(listagrupoListListagrupoToAttach);
+            Listagrupo folioListaGrupo = asistencia.getFolioListaGrupo();
+            if (folioListaGrupo != null){
+                folioListaGrupo = em.getReference(folioListaGrupo.getClass(), folioListaGrupo.getFolioListaGrupo());
+                asistencia.setFolioListaGrupo(folioListaGrupo);
             }
-            asistencia.setListagrupoList(attachedListagrupoList);
             em.persist(asistencia);
-            for (Listagrupo listagrupoListListagrupo : asistencia.getListagrupoList()){
-                Asistencia oldFolioAsistenciaOfListagrupoListListagrupo = listagrupoListListagrupo.getFolioAsistencia();
-                listagrupoListListagrupo.setFolioAsistencia(asistencia);
-                listagrupoListListagrupo = em.merge(listagrupoListListagrupo);
-                if (oldFolioAsistenciaOfListagrupoListListagrupo != null){
-                    oldFolioAsistenciaOfListagrupoListListagrupo.getListagrupoList().remove(listagrupoListListagrupo);
-                    oldFolioAsistenciaOfListagrupoListListagrupo = em.merge(oldFolioAsistenciaOfListagrupoListListagrupo);
-                }
+            if (folioListaGrupo != null){
+                folioListaGrupo.getAsistenciaList().add(asistencia);
+                folioListaGrupo = em.merge(folioListaGrupo);
             }
             em.getTransaction().commit();
         }finally{
@@ -71,32 +61,20 @@ public class AsistenciaJpaController implements Serializable{
             em = getEntityManager();
             em.getTransaction().begin();
             Asistencia persistentAsistencia = em.find(Asistencia.class, asistencia.getFolioAsistencia());
-            List<Listagrupo> listagrupoListOld = persistentAsistencia.getListagrupoList();
-            List<Listagrupo> listagrupoListNew = asistencia.getListagrupoList();
-            List<Listagrupo> attachedListagrupoListNew = new ArrayList<Listagrupo>();
-            for (Listagrupo listagrupoListNewListagrupoToAttach : listagrupoListNew){
-                listagrupoListNewListagrupoToAttach = em.getReference(listagrupoListNewListagrupoToAttach.getClass(), listagrupoListNewListagrupoToAttach.getFolioListaGrupo());
-                attachedListagrupoListNew.add(listagrupoListNewListagrupoToAttach);
+            Listagrupo folioListaGrupoOld = persistentAsistencia.getFolioListaGrupo();
+            Listagrupo folioListaGrupoNew = asistencia.getFolioListaGrupo();
+            if (folioListaGrupoNew != null){
+                folioListaGrupoNew = em.getReference(folioListaGrupoNew.getClass(), folioListaGrupoNew.getFolioListaGrupo());
+                asistencia.setFolioListaGrupo(folioListaGrupoNew);
             }
-            listagrupoListNew = attachedListagrupoListNew;
-            asistencia.setListagrupoList(listagrupoListNew);
             asistencia = em.merge(asistencia);
-            for (Listagrupo listagrupoListOldListagrupo : listagrupoListOld){
-                if (!listagrupoListNew.contains(listagrupoListOldListagrupo)){
-                    listagrupoListOldListagrupo.setFolioAsistencia(null);
-                    listagrupoListOldListagrupo = em.merge(listagrupoListOldListagrupo);
-                }
+            if (folioListaGrupoOld != null && !folioListaGrupoOld.equals(folioListaGrupoNew)){
+                folioListaGrupoOld.getAsistenciaList().remove(asistencia);
+                folioListaGrupoOld = em.merge(folioListaGrupoOld);
             }
-            for (Listagrupo listagrupoListNewListagrupo : listagrupoListNew){
-                if (!listagrupoListOld.contains(listagrupoListNewListagrupo)){
-                    Asistencia oldFolioAsistenciaOfListagrupoListNewListagrupo = listagrupoListNewListagrupo.getFolioAsistencia();
-                    listagrupoListNewListagrupo.setFolioAsistencia(asistencia);
-                    listagrupoListNewListagrupo = em.merge(listagrupoListNewListagrupo);
-                    if (oldFolioAsistenciaOfListagrupoListNewListagrupo != null && !oldFolioAsistenciaOfListagrupoListNewListagrupo.equals(asistencia)){
-                        oldFolioAsistenciaOfListagrupoListNewListagrupo.getListagrupoList().remove(listagrupoListNewListagrupo);
-                        oldFolioAsistenciaOfListagrupoListNewListagrupo = em.merge(oldFolioAsistenciaOfListagrupoListNewListagrupo);
-                    }
-                }
+            if (folioListaGrupoNew != null && !folioListaGrupoNew.equals(folioListaGrupoOld)){
+                folioListaGrupoNew.getAsistenciaList().add(asistencia);
+                folioListaGrupoNew = em.merge(folioListaGrupoNew);
             }
             em.getTransaction().commit();
         }catch (Exception ex){
@@ -127,10 +105,10 @@ public class AsistenciaJpaController implements Serializable{
             }catch (EntityNotFoundException enfe){
                 throw new NonexistentEntityException("The asistencia with id " + id + " no longer exists.", enfe);
             }
-            List<Listagrupo> listagrupoList = asistencia.getListagrupoList();
-            for (Listagrupo listagrupoListListagrupo : listagrupoList){
-                listagrupoListListagrupo.setFolioAsistencia(null);
-                listagrupoListListagrupo = em.merge(listagrupoListListagrupo);
+            Listagrupo folioListaGrupo = asistencia.getFolioListaGrupo();
+            if (folioListaGrupo != null){
+                folioListaGrupo.getAsistenciaList().remove(asistencia);
+                folioListaGrupo = em.merge(folioListaGrupo);
             }
             em.remove(asistencia);
             em.getTransaction().commit();
@@ -186,5 +164,5 @@ public class AsistenciaJpaController implements Serializable{
             em.close();
         }
     }
-    
+
 }

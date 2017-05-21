@@ -14,6 +14,7 @@ import entidades.Grupo;
 import entidades.Alumno;
 import entidades.Asistencia;
 import entidades.Listagrupo;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -35,6 +36,9 @@ public class ListagrupoJpaController implements Serializable{
     }
 
     public void create(Listagrupo listagrupo){
+        if (listagrupo.getAsistenciaList() == null){
+            listagrupo.setAsistenciaList(new ArrayList<Asistencia>());
+        }
         EntityManager em = null;
         try{
             em = getEntityManager();
@@ -49,11 +53,12 @@ public class ListagrupoJpaController implements Serializable{
                 matriculaAlumno = em.getReference(matriculaAlumno.getClass(), matriculaAlumno.getMatriculaAlumno());
                 listagrupo.setMatriculaAlumno(matriculaAlumno);
             }
-            Asistencia folioAsistencia = listagrupo.getFolioAsistencia();
-            if (folioAsistencia != null){
-                folioAsistencia = em.getReference(folioAsistencia.getClass(), folioAsistencia.getFolioAsistencia());
-                listagrupo.setFolioAsistencia(folioAsistencia);
+            List<Asistencia> attachedAsistenciaList = new ArrayList<Asistencia>();
+            for (Asistencia asistenciaListAsistenciaToAttach : listagrupo.getAsistenciaList()){
+                asistenciaListAsistenciaToAttach = em.getReference(asistenciaListAsistenciaToAttach.getClass(), asistenciaListAsistenciaToAttach.getFolioAsistencia());
+                attachedAsistenciaList.add(asistenciaListAsistenciaToAttach);
             }
+            listagrupo.setAsistenciaList(attachedAsistenciaList);
             em.persist(listagrupo);
             if (matriculaGrupo != null){
                 matriculaGrupo.getListagrupoList().add(listagrupo);
@@ -63,9 +68,14 @@ public class ListagrupoJpaController implements Serializable{
                 matriculaAlumno.getListagrupoList().add(listagrupo);
                 matriculaAlumno = em.merge(matriculaAlumno);
             }
-            if (folioAsistencia != null){
-                folioAsistencia.getListagrupoList().add(listagrupo);
-                folioAsistencia = em.merge(folioAsistencia);
+            for (Asistencia asistenciaListAsistencia : listagrupo.getAsistenciaList()){
+                Listagrupo oldFolioListaGrupoOfAsistenciaListAsistencia = asistenciaListAsistencia.getFolioListaGrupo();
+                asistenciaListAsistencia.setFolioListaGrupo(listagrupo);
+                asistenciaListAsistencia = em.merge(asistenciaListAsistencia);
+                if (oldFolioListaGrupoOfAsistenciaListAsistencia != null){
+                    oldFolioListaGrupoOfAsistenciaListAsistencia.getAsistenciaList().remove(asistenciaListAsistencia);
+                    oldFolioListaGrupoOfAsistenciaListAsistencia = em.merge(oldFolioListaGrupoOfAsistenciaListAsistencia);
+                }
             }
             em.getTransaction().commit();
         }finally{
@@ -85,8 +95,8 @@ public class ListagrupoJpaController implements Serializable{
             Grupo matriculaGrupoNew = listagrupo.getMatriculaGrupo();
             Alumno matriculaAlumnoOld = persistentListagrupo.getMatriculaAlumno();
             Alumno matriculaAlumnoNew = listagrupo.getMatriculaAlumno();
-            Asistencia folioAsistenciaOld = persistentListagrupo.getFolioAsistencia();
-            Asistencia folioAsistenciaNew = listagrupo.getFolioAsistencia();
+            List<Asistencia> asistenciaListOld = persistentListagrupo.getAsistenciaList();
+            List<Asistencia> asistenciaListNew = listagrupo.getAsistenciaList();
             if (matriculaGrupoNew != null){
                 matriculaGrupoNew = em.getReference(matriculaGrupoNew.getClass(), matriculaGrupoNew.getMatriculaGrupo());
                 listagrupo.setMatriculaGrupo(matriculaGrupoNew);
@@ -95,10 +105,13 @@ public class ListagrupoJpaController implements Serializable{
                 matriculaAlumnoNew = em.getReference(matriculaAlumnoNew.getClass(), matriculaAlumnoNew.getMatriculaAlumno());
                 listagrupo.setMatriculaAlumno(matriculaAlumnoNew);
             }
-            if (folioAsistenciaNew != null){
-                folioAsistenciaNew = em.getReference(folioAsistenciaNew.getClass(), folioAsistenciaNew.getFolioAsistencia());
-                listagrupo.setFolioAsistencia(folioAsistenciaNew);
+            List<Asistencia> attachedAsistenciaListNew = new ArrayList<Asistencia>();
+            for (Asistencia asistenciaListNewAsistenciaToAttach : asistenciaListNew){
+                asistenciaListNewAsistenciaToAttach = em.getReference(asistenciaListNewAsistenciaToAttach.getClass(), asistenciaListNewAsistenciaToAttach.getFolioAsistencia());
+                attachedAsistenciaListNew.add(asistenciaListNewAsistenciaToAttach);
             }
+            asistenciaListNew = attachedAsistenciaListNew;
+            listagrupo.setAsistenciaList(asistenciaListNew);
             listagrupo = em.merge(listagrupo);
             if (matriculaGrupoOld != null && !matriculaGrupoOld.equals(matriculaGrupoNew)){
                 matriculaGrupoOld.getListagrupoList().remove(listagrupo);
@@ -116,13 +129,22 @@ public class ListagrupoJpaController implements Serializable{
                 matriculaAlumnoNew.getListagrupoList().add(listagrupo);
                 matriculaAlumnoNew = em.merge(matriculaAlumnoNew);
             }
-            if (folioAsistenciaOld != null && !folioAsistenciaOld.equals(folioAsistenciaNew)){
-                folioAsistenciaOld.getListagrupoList().remove(listagrupo);
-                folioAsistenciaOld = em.merge(folioAsistenciaOld);
+            for (Asistencia asistenciaListOldAsistencia : asistenciaListOld){
+                if (!asistenciaListNew.contains(asistenciaListOldAsistencia)){
+                    asistenciaListOldAsistencia.setFolioListaGrupo(null);
+                    asistenciaListOldAsistencia = em.merge(asistenciaListOldAsistencia);
+                }
             }
-            if (folioAsistenciaNew != null && !folioAsistenciaNew.equals(folioAsistenciaOld)){
-                folioAsistenciaNew.getListagrupoList().add(listagrupo);
-                folioAsistenciaNew = em.merge(folioAsistenciaNew);
+            for (Asistencia asistenciaListNewAsistencia : asistenciaListNew){
+                if (!asistenciaListOld.contains(asistenciaListNewAsistencia)){
+                    Listagrupo oldFolioListaGrupoOfAsistenciaListNewAsistencia = asistenciaListNewAsistencia.getFolioListaGrupo();
+                    asistenciaListNewAsistencia.setFolioListaGrupo(listagrupo);
+                    asistenciaListNewAsistencia = em.merge(asistenciaListNewAsistencia);
+                    if (oldFolioListaGrupoOfAsistenciaListNewAsistencia != null && !oldFolioListaGrupoOfAsistenciaListNewAsistencia.equals(listagrupo)){
+                        oldFolioListaGrupoOfAsistenciaListNewAsistencia.getAsistenciaList().remove(asistenciaListNewAsistencia);
+                        oldFolioListaGrupoOfAsistenciaListNewAsistencia = em.merge(oldFolioListaGrupoOfAsistenciaListNewAsistencia);
+                    }
+                }
             }
             em.getTransaction().commit();
         }catch (Exception ex){
@@ -163,10 +185,10 @@ public class ListagrupoJpaController implements Serializable{
                 matriculaAlumno.getListagrupoList().remove(listagrupo);
                 matriculaAlumno = em.merge(matriculaAlumno);
             }
-            Asistencia folioAsistencia = listagrupo.getFolioAsistencia();
-            if (folioAsistencia != null){
-                folioAsistencia.getListagrupoList().remove(listagrupo);
-                folioAsistencia = em.merge(folioAsistencia);
+            List<Asistencia> asistenciaList = listagrupo.getAsistenciaList();
+            for (Asistencia asistenciaListAsistencia : asistenciaList){
+                asistenciaListAsistencia.setFolioListaGrupo(null);
+                asistenciaListAsistencia = em.merge(asistenciaListAsistencia);
             }
             em.remove(listagrupo);
             em.getTransaction().commit();
@@ -222,13 +244,5 @@ public class ListagrupoJpaController implements Serializable{
             em.close();
         }
     }
-    
-    public List<Listagrupo> buscarPorInscripcion(){
-        EntityManager em = getEntityManager();
-        
-        List<Listagrupo> resultado = (List<Listagrupo>) em.createNamedQuery("Listagrupo.findByInscripcion").getResultList();
-        em.close();
-        return resultado;
-    }
-    
+
 }

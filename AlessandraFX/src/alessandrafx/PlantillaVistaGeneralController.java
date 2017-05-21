@@ -9,7 +9,6 @@ import alessandramc.SistemaAleMC;
 import entidades.Alumno;
 import entidades.Colaborador;
 import entidades.Grupo;
-import entidades.Persona;
 import entidades.Promociones;
 import util.ControlledScreen;
 import util.ScreensController;
@@ -187,5 +186,6 @@ public class PlantillaVistaGeneralController extends FXGenerico implements Initi
         label6.setVisible(false);
         label7.setVisible(false);
     }
+    
 
 }

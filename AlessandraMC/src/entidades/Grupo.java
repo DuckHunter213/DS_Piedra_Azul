@@ -32,6 +32,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Grupo.findByNombre", query = "SELECT g FROM Grupo g WHERE g.nombre = :nombre")
     , @NamedQuery(name = "Grupo.findByEstado", query = "SELECT g FROM Grupo g WHERE g.estado = :estado")
     , @NamedQuery(name = "Grupo.findByPrecio", query = "SELECT g FROM Grupo g WHERE g.precio = :precio")
+    , @NamedQuery(name = "Grupo.findByMatriculaColaborador", query = "SELECT g FROM Grupo g WHERE g.matriculaColaborador = :matriculaColaborador")
+    , @NamedQuery(name = "Grupo.findByMatriculaColaboradorActivos", query = "SELECT g FROM Grupo g WHERE g.matriculaColaborador = :matriculaColaborador AND g.estado = :estado")
     , @NamedQuery(name = "Grupo.findByMatriculaGrupo", query = "SELECT g FROM Grupo g WHERE g.matriculaGrupo = :matriculaGrupo")})
 public class Grupo implements Serializable{
     private static final long serialVersionUID = 1L;
@@ -140,7 +142,7 @@ public class Grupo implements Serializable{
 
     @Override
     public String toString(){
-        return nombre +  " [" + matriculaGrupo + "]";
+        return nombre + " [" + matriculaGrupo + "]";
     }
-    
+
 }

@@ -7,10 +7,10 @@ package alessandrafx;
 
 import Excepciones.DatoFaltante;
 import alessandramc.SistemaAleMC;
-import entidades.Promociones;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -47,9 +47,7 @@ public class VentanaControlPromocionController extends FXGenerico implements Ini
 
     private ScreensController myController;
     private MarcoVentanaController padre;
-    private PlantillaVistaGeneralController plantillaSeleccionada;
     private SistemaAleMC sistema;
-    private Promociones promocion;
 
     private String cantidadCupones;
     private String nombre;
@@ -112,20 +110,16 @@ public class VentanaControlPromocionController extends FXGenerico implements Ini
         }
         try {
             porcentajeDescuento = campoDescuento.getText();
-            int valorDescuento = Integer.parseInt(porcentajeDescuento.toString());
+            int valorDescuento = Integer.parseInt(porcentajeDescuento);
 
             if (valorDescuento < 1 || valorDescuento > 100) {
                 throw new DatoFaltante("Faltan datos", "El porcentaje de descuento es inválido");
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException | DatoFaltante e) {
             throw new DatoFaltante("Faltan datos", "El porcentaje de descuento está vacio");
         }
         try {
-            if (toggleAnualidad.isSelected() == true)
-                tipoCupon = true;
-            else{
-                tipoCupon = false;
-            }
+            tipoCupon = toggleAnualidad.isSelected() == true;
             if (toggleAnualidad.isSelected() == false && toggleMensualidad.isSelected() == false) {
                 throw new DatoFaltante("Faltan datos", "El tipo de descuento es inválido");
             }
@@ -144,6 +138,7 @@ public class VentanaControlPromocionController extends FXGenerico implements Ini
             alerta.setHeaderText(null);
             alerta.setContentText("Tu promoción ha sido registrada");
             alerta.showAndWait();
+            padre.irAControlPromociones(new ActionEvent());
         } catch (DatoFaltante e) {
             Alert alerta = new Alert(Alert.AlertType.INFORMATION);
             alerta.setTitle(e.getMessage());

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alessandrafx.VentanaConfiguracionController">
+   <children>
+      <Pane>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
+         <children>
+            <VBox prefWidth="800.0">
+               <children>
+                  <HBox>
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="140.0" text="Costo anual de inscripcion">
+                           <HBox.margin>
+                              <Insets right="15.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="textBoxCostoAnual" />
+                        <Label prefHeight="25.0" prefWidth="28.0" text="\$">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="30.0" layoutY="30.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="209.0" text="Porcentaje de penalizacion por atraso">
+                           <HBox.margin>
+                              <Insets right="15.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="textBoxPenalizacion" />
+                        <Label prefHeight="25.0" prefWidth="28.0" text="\%">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="30.0" layoutY="65.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="209.0" text="Pago porcentual a los colaboradores">
+                           <HBox.margin>
+                              <Insets right="15.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="textBoxPagoColaborador" />
+                        <Label prefHeight="25.0" prefWidth="28.0" text="\%">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="30.0" layoutY="100.0">
+                     <children>
+                        <Button fx:id="botonCancelar" mnemonicParsing="false" onMouseClicked="#clicCancelar" text="Cancelar">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="botonGuardar" mnemonicParsing="false" onMouseClicked="#clicGuardar" text="Guardar" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="15.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </VBox>
+         </children>
+      </Pane>
+   </children>
+</Pane>

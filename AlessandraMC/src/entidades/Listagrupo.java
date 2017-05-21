@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,8 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -30,7 +28,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Listagrupo.findAll", query = "SELECT l FROM Listagrupo l")
     , @NamedQuery(name = "Listagrupo.findByFolioListaGrupo", query = "SELECT l FROM Listagrupo l WHERE l.folioListaGrupo = :folioListaGrupo")
     , @NamedQuery(name = "Listagrupo.findByInscripcion", query = "SELECT l FROM Listagrupo l WHERE l.matriculaGrupo = :matriculaGrupo AND l.matriculaAlumno = :matriculaAlumno")
+    , @NamedQuery(name = "Listagrupo.findByInscritosInactivos", query = "SELECT l FROM Listagrupo l WHERE l.matriculaGrupo = :matriculaGrupo AND l.matriculaAlumno = :matriculaAlumno AND l.estado = :estado")
     , @NamedQuery(name = "Listagrupo.findByAlumnosActivos", query = "SELECT l FROM Listagrupo l WHERE l.matriculaGrupo = :matriculaGrupo AND l.estado = :estado")
+    , @NamedQuery(name = "Listagrupo.findByAlumnoEstado", query = "SELECT l FROM Listagrupo l WHERE l.matriculaAlumno = :matriculaAlumno AND l.estado = :estado")
     , @NamedQuery(name = "Listagrupo.findByEstado", query = "SELECT l FROM Listagrupo l WHERE l.estado = :estado")})
 public class Listagrupo implements Serializable{
     private static final long serialVersionUID = 1L;
@@ -41,15 +41,14 @@ public class Listagrupo implements Serializable{
     private Integer folioListaGrupo;
     @Column(name = "estado")
     private Boolean estado;
+    @OneToMany(mappedBy = "folioListaGrupo")
+    private List<Asistencia> asistenciaList;
     @JoinColumn(name = "matriculaGrupo", referencedColumnName = "matriculaGrupo")
     @ManyToOne
     private Grupo matriculaGrupo;
     @JoinColumn(name = "matriculaAlumno", referencedColumnName = "matriculaAlumno")
     @ManyToOne
     private Alumno matriculaAlumno;
-    @JoinColumn(name = "folioAsistencia", referencedColumnName = "folioAsistencia")
-    @ManyToOne
-    private Asistencia folioAsistencia;
 
     public Listagrupo(){
     }
@@ -74,6 +73,15 @@ public class Listagrupo implements Serializable{
         this.estado = estado;
     }
 
+    @XmlTransient
+    public List<Asistencia> getAsistenciaList(){
+        return asistenciaList;
+    }
+
+    public void setAsistenciaList(List<Asistencia> asistenciaList){
+        this.asistenciaList = asistenciaList;
+    }
+
     public Grupo getMatriculaGrupo(){
         return matriculaGrupo;
     }
@@ -88,14 +96,6 @@ public class Listagrupo implements Serializable{
 
     public void setMatriculaAlumno(Alumno matriculaAlumno){
         this.matriculaAlumno = matriculaAlumno;
-    }
-
-    public Asistencia getFolioAsistencia(){
-        return folioAsistencia;
-    }
-
-    public void setFolioAsistencia(Asistencia folioAsistencia){
-        this.folioAsistencia = folioAsistencia;
     }
 
     @Override
@@ -122,5 +122,5 @@ public class Listagrupo implements Serializable{
     public String toString(){
         return "entidades.Listagrupo[ folioListaGrupo=" + folioListaGrupo + " ]";
     }
-    
+
 }

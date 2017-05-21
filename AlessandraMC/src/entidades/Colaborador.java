@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entidades;
 
 import java.io.Serializable;
@@ -42,7 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Colaborador.findByEstado", query = "SELECT c FROM Colaborador c WHERE c.estado = :estado")
     , @NamedQuery(name = "Colaborador.findByFechaNacimiento", query = "SELECT c FROM Colaborador c WHERE c.fechaNacimiento = :fechaNacimiento")
     , @NamedQuery(name = "Colaborador.findByNumero", query = "SELECT c FROM Colaborador c WHERE c.numero = :numero")})
-public class Colaborador extends Persona implements Serializable{
+public class Colaborador implements Serializable{
     private static final long serialVersionUID = 1L;
     @Column(name = "titulo")
     private String titulo;
@@ -50,16 +45,25 @@ public class Colaborador extends Persona implements Serializable{
     @Basic(optional = false)
     @Column(name = "matriculaColaborador")
     private String matriculaColaborador;
+    @Basic(optional = false)
     @Column(name = "nombre")
     private String nombre;
+    @Basic(optional = false)
     @Column(name = "apellidoPaterno")
     private String apellidoPaterno;
+    @Basic(optional = false)
     @Column(name = "apellidoMaterno")
     private String apellidoMaterno;
     @Column(name = "calle")
     private String calle;
+    @Basic(optional = false)
     @Column(name = "fechaRegistro")
-    private String fechaRegistro;
+    @Temporal(TemporalType.DATE)
+    private Date fechaRegistro;
+    @Basic(optional = false)
+    @Column(name = "fechaPago")
+    @Temporal(TemporalType.DATE)
+    private Date fechaPago;
     @Column(name = "colonia")
     private String colonia;
     @Column(name = "telefono")
@@ -79,6 +83,15 @@ public class Colaborador extends Persona implements Serializable{
 
     public Colaborador(String matriculaColaborador){
         this.matriculaColaborador = matriculaColaborador;
+    }
+
+    public Colaborador(String matriculaColaborador, String nombre, String apellidoPaterno, String apellidoMaterno, Date fechaRegistro, Date fechaPago){
+        this.matriculaColaborador = matriculaColaborador;
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.fechaRegistro = fechaRegistro;
+        this.fechaPago = fechaPago;
     }
 
     public String getTitulo(){
@@ -129,12 +142,20 @@ public class Colaborador extends Persona implements Serializable{
         this.calle = calle;
     }
 
-    public String getFechaRegistro(){
+    public Date getFechaRegistro(){
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(String fechaRegistro){
+    public void setFechaRegistro(Date fechaRegistro){
         this.fechaRegistro = fechaRegistro;
+    }
+
+    public Date getFechaPago(){
+        return fechaPago;
+    }
+
+    public void setFechaPago(Date fechaPago){
+        this.fechaPago = fechaPago;
     }
 
     public String getColonia(){
@@ -211,9 +232,4 @@ public class Colaborador extends Persona implements Serializable{
         return nombre + " " + apellidoPaterno + " " + apellidoMaterno + " [" + matriculaColaborador + "]";
     }
 
-    @Override
-    public String getTipoPersona(){
-        return "colaborador";
-    }
-    
 }

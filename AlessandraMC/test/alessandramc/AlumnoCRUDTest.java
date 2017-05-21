@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import jpaalessandramc.AlumnoJpaController;
+import jpaalessandramc.exceptions.IllegalOrphanException;
 import jpaalessandramc.exceptions.NonexistentEntityException;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -27,22 +28,28 @@ public class AlumnoCRUDTest{
     @Before
     public void setUp(){
         Alumno alumno = new Alumno();
-        alumno.setApellidoMaterno("Alejandre");
-        alumno.setApellidoPaterno("Gomez");
-        alumno.setCalle("Melchor Musguit");
-        alumno.setColonia("Revolucion");
-        alumno.setCorreo("gomez.alejandre@gmail.com");
-        alumno.setEstado(Boolean.TRUE);
-        Date fechaNacimiento = new Date();
-        alumno.setFechaInscripcion(fechaNacimiento);
-        alumno.setFechaNacimiento(fechaNacimiento);
+        Date date = new Date();
         alumno.setMatriculaAlumno(matriculaAlumno);
-        alumno.setNombre("Luis Fernando");
-        alumno.setNombreTutor("Victor Manuel Gomez Alejandre");
-        alumno.setNumero("7");
-        alumno.setTelefono("2282229579");
-        alumno.setTelefonoTutor("2281114099");
-        
+        alumno.setNombre("Prueba");
+        alumno.setApellidoPaterno("Prueba");
+        alumno.setApellidoMaterno("Prueba");
+        alumno.setFechaNacimiento(date);
+        alumno.setCalle("Prueba");
+        alumno.setNumero("Prueba");
+        alumno.setColonia("Prueba");
+        alumno.setCorreo("Prueba");
+        alumno.setTelefono("Prueba");
+        alumno.setEstado(Boolean.TRUE);
+        alumno.setFechaInscripcion(date);
+        int diaAlumno = date.getDate();
+        if (diaAlumno == 29 || diaAlumno == 30 || diaAlumno == 31){
+            diaAlumno = 28;
+        }
+        date.setDate(diaAlumno);
+        alumno.setUltimaFechaPago(date);
+        alumno.setNombreTutor("Prueba");
+        alumno.setTelefonoTutor("Prueba");
+
         try{
             alumnoBD.create(alumno);
         }catch (Exception ex){
@@ -84,9 +91,10 @@ public class AlumnoCRUDTest{
     public void tearDown(){
         try{
             alumnoBD.destroy(matriculaAlumno);
-        }catch (NonexistentEntityException ex){
-            Logger.getLogger(ColaboradorCRUDTest.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (NonexistentEntityException | IllegalOrphanException ex){
+            Logger.getLogger(AlumnoCRUDTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
 }

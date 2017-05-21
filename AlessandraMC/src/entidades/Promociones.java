@@ -118,5 +118,5 @@ public class Promociones implements Serializable{
     public String toString(){
         return "entidades.Promociones[ folioPromocion=" + folioPromocion + " ]";
     }
-    
+
 }

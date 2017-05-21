@@ -241,7 +241,7 @@ public class VentanaControlGrupoController extends FXGenerico implements Initial
         }
     }
 
-    public void guardarGrupo(List<Alumno> listaAlumno) {
+    public void guardarGrupo(List<Alumno> listaAlumno, ArrayList<Alumno> listaAlumnosRetirados) {
         try {
             //los parametros se setean antes
             String nombreCurso = getNombre();
@@ -249,7 +249,7 @@ public class VentanaControlGrupoController extends FXGenerico implements Initial
             ArrayList<Horario> listaHorario = armarHorario();
             Colaborador colaboradorCurso = getColaborador();
             if (this.grupoRegistrado != null) {
-                sistema.editarGrupo(nombreCurso, precioCurso, listaHorario, listaAlumno, colaboradorCurso, grupoRegistrado.getMatriculaGrupo());
+                sistema.editarGrupo(nombreCurso, precioCurso, listaHorario, listaAlumno, listaAlumnosRetirados, colaboradorCurso, grupoRegistrado.getMatriculaGrupo());
             } else {
                 sistema.crearGrupo(nombreCurso, precioCurso, listaHorario, listaAlumno, colaboradorCurso);
             }
@@ -281,10 +281,10 @@ public class VentanaControlGrupoController extends FXGenerico implements Initial
             if (respuesta.get() == ButtonType.OK) {
                 if (this.grupoRegistrado != null) {
                     sistema.desabilitarGrupo(grupoRegistrado);
-                    this.padre.root.getChildren().clear();
-                } else {
-                    this.padre.root.getChildren().clear();
                 }
+                this.padre.root.getChildren().clear();
+                this.padre.irAControlGrupo(new ActionEvent());
+                
             } else {
                 System.out.println("error");
             }

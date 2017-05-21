@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alessandrafx.VentanaPaseListaController">
+   <children>
+      <Pane>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
+         <children>
+            <VBox prefWidth="800.0">
+               <children>
+                  <Label text="Asistencia">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Separator prefWidth="200.0" />
+                  <Label text="*Una vez guardada la lista, no puede ser editada, ¡Ten cuidado!" textFill="#27d700">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Pane fx:id="panelAlumnos" />
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </children>
+</Pane>
